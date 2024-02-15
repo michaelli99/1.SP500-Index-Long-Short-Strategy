@@ -3,8 +3,8 @@ In this project, we selected eight macroeconomic, fundamental, and technical ind
 
 ![alt text](plots/figure1_strategy_performance.png)
 
-The following content is divided into four parts to elaborate <\br>
-All data and code are available at this repository for replication purpose. <\br>
+The following content is divided into four parts to elaborate <br />
+All data and code are available at this repository for replication purpose. <br />
 Please notice that this project is for demonstration only and does not provide any investment advice.
 
 
