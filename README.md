@@ -60,7 +60,7 @@ The data were divided into training and testing set with the classic 80-20 split
 
 ### 3.1. Training Set
 **Training set data spans from 1990-07-31 to 2017-03-31 with a total of 321 data points.** In the training set, we derived the best hyperparameters for each prediction model. Additionally, since there were regularization/penalization components in ridge regression and support vector regression models, regressors had to be standardized/normalized to achieve equal importance in the prediction. Hence the training set was also used to derive the nomralization scalar.  
-Below is a summary of hyperparameters that were derived from the trainings set:
+Below is a summary of hyperparameters that were derived from the training set:
 - **Ridge Regression:**
     - Alpha: Constant that multiplies the L2 term, controlling regularization strength.
     - Normalization scalar: $\mu$ and $\sigma$.
