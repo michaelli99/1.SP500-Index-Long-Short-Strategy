@@ -14,9 +14,7 @@ graph TD;
     Feature Selection --> Ridge Regression;
     Feature Selection --> SVR;
     Feature Selection --> Random Forest;
-    Ridge Regression --> Performance Evaluation;
-    SVR --> Performance Evaluation;
-    Random Forest --> Performance Evaluation;
+
 ```
 ## 1. Data Sourcing and Cleaning
 ## 2. Feature Engineering
