@@ -9,15 +9,18 @@ Please notice that this project is for demonstration only and does not provide a
 
 ## Workflow
 ```mermaid
-graph TD;
-    Data Sourcing --> Feature Selection;
-    Feature Selection --> Ridge Regression;
-    Feature Selection --> SVR;
-    Feature Selection --> Random Forest;
-
+flowchart TD
+    A[Data Sourcing] --> B[Feature Selection]
+    B --> C[Ridge Regression]
+    B --> D[SVR]
+    B --> E[Random Forest]
+    C --> F[Prediction and Strategy Performance Evaluation]
+    D --> F
+    E --> F
+    F --> G["Prediction Attribution (Ridge Regression)"]
 ```
-## 1. Data Sourcing and Cleaning
+## 1. Data Sourcing
 ## 2. Feature Engineering
-## 3. Modeling Training and Testing
+## 3. Models Training and Testing
 ## 4. Prediction and Strategy Performance Evaluation
 ## 5. Prediction Attribution (Ridge Regression Only)
