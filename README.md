@@ -117,13 +117,26 @@ We ignored any implicit and explicit trasaction costs to simplify the calculatio
 
 ![alt text](plots/dataframe3_strat_performance.png)
 
+**From the dataframe, we can see that all three strategies outperformed the index in terms of annualized return, Sharpe ratio, Calmar ratio, and 95% VaR.**  
+**The strategy based on SVR prediction has the best performance in all perspectives and outplays the index by 10.11% per annum.** Although SVR has the lowest prediction direction accuracy (win ratio), the strategy is better at capturing more extreme movements of the index than the other two models. This could be explained by the hyperparameter alpha in SVR model which allows the model to ignore the less extreme prediction error in the training set, and thus the model is robust to small prediction errors.  
+**Ridge Regression achieves 19.38% annualized return and has similar performance to SVR.** However, the maximum drawdown of Ridge Regression strategy is 21.13%, which is 1.5 times of SVR's maximum drawdown. The maximum drawdown of Ridge Regression happens during the first quarter of 2020 when the market was volatile due to COVID and Ridge Regression mispredicts the return direction three times in a row.  
+**Random Forest outperforms S&P 500 Index slightly and has comparable performance with the S&P 500 Index.** It has higher volatility and maximum drawdown but lower 95% VaR.  
+From the following performance time-series plot, we can see that all three strategies attain positive returns in 2022 when the index dropped by 20%. This could be explained by the first two regressors which are derived from CPI components. However, if CPI and inflation are less associated with S&P 500 Index return in the future, the models' performance might not be as good as the backtest period.  
+**Overall, we can conclude that our long-short trading strategies based on Ridge Regression and SVR achieve better performance than S&P 500 Index. Both Ridge Regression and SVR has better annualized return, Sharpe ratio, drawdown, Calmar ratio, and 95% VaR. Random Forest strategy does not have obvious outperformance. The different strategy performance of Ridge Regression, SVR, and Random Forest model indicates that the selected regressors/features are more suitable for linear models such as Ridge Regression and SVR with linear kernel.**
+
 ![alt text](plots/figure1_strategy_performance.png)
 
-From the dataframe above, we can see that all three strategies outperformed the index in terms of annualized return, Sharpe ratio, Calmar ratio, and 95% VaR.  
-The strategy based on SVR prediction has the best performance in all perspectives and outplays the index by 10.11% per annum. Although SVR has the lowest prediction direction accuracy (win ratio), the strategy is better at capturing more extreme movements of the index than the other two models. This could be explained by the hyperparameter alpha in SVR model which allows the model to ignore the less extreme prediction error in the training set, and thus the model is robust to small prediction error.  
-Ridge Regression achieves 19.38% annualized return and has similar performance to SVR. However, the maximum drawdown of Ridge Regression strategy is 21.13%, which is 1.5 times of SVR's maximum drawdown. The maximum drawdown of Ridge Regression happens during the first quarter of 2020 when the market was volatile due to COVID and Ridge Regression mispredicts the return direction three times in a row.  
-Random Forest outperforms S&P 500 Index slightly and has comparable performance with the index. It higher volatility and maximum drawdown but lower 95% VaR.  
-From the following performance time-series plot, we can see that all three strategies attain positive returns in 2022 when the index dropped by 20%. The first two selected regressors in our models are derived from CPI components, and they likely contribute to the correct predictions in 2022 for all three models. However, if CPI and inflation are less associated with S&P 500 Index return in the future, the models' performance might not be as good as 2022.  
-Overall, we conclude that the long-short trading strategies based on Ridge Regression and SVR achieve better performance than S&P 500 Index. Both Ridge Regression and SVR has better annualized return, Sharpe ratio, drawdown, Calmar ratio, and 95% VaR. Random Forest strategy does not have obvious outperformance. The distinguished strategy performance of Ridge Regression, SVR, and Random Forest model indicates that the selected regressors/features are more suitable for linear models such as Ridge Regression and SVR with linear kernel.
-
 ## 5. Prediction Attribution (Ridge Regression Only)
+
+One advantage of Ridge Regression is its simplicity. The predicted value of Ridge Regression can be written as: $$y = \beta^Tx = \beta_0 x_0 + \beta_1 x_1 + \cdots + \beta_n x_n$$  
+With this formula, we can easily attribute the predicted value into exposures on each factors and factors' values. In the following graphs, we demonstrate this advantage of Ridge Regression using 2023-12-31 and 2024-01-31 as examples and compare the two month's exposures, factors' values, and factors' contribution to alpha side by side.
+
+![alt text](plots/figure7_pred_attr1.png)
+
+![alt text](plots/figure8_pred_attr2.png)
+
+![alt text](plots/figure9_pred_attr3.png)
+
+Figure 7 shows the exposures on each factor. We can observe that the exposures' values are very similar for two months, and we expect the index's return has stable correlation the selected factors. From Figure 9, we can see that the contribution from PSAVERT and VIX_Log_Return_6M changed the most from 2023-12-31 to 2024-01-31. This can be further attributed to the fact that PSAVERT factor value decreases and VIX_LOG_Return_6M value increases during the same period. Summing all the factors contribution together for each month, we will get the predicted value of 0.007317 for 2023-12-31 and 0.005797 for 2024-01-31.
+
+
