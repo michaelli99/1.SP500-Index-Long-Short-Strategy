@@ -32,9 +32,9 @@ We chose to use log return because of its potential of being normally distribute
 To predict the target variable, we first built a pool of candidate regressors with raw predictors data and basic mathematical transformation. The raw data can be classified into three categories: **economic, fundamental, and technical data**. Below is a short description for each category.
 - Economic data includes macroeconomic indicators such as CPI components, employment statistics, and interest rates. Most of them are related to monetary or fiscal policy.
 - Fundamental data consists of valuation data for S&P 500 Index such as earnings, PE, and dividend yield.
-- Technical data was derived from S&P 500 Index and VIX's historical price and trading volume.
+- Technical data was derived from S&P 500 Index and VIX's historical prices and trading volume.
 
-After sourcing the data, we converted all factors data into monthly basis. Then we moved historical data to the actual data release month to prevent data leakage. Finally, all response and predictors' monthly data are available from July 1990 to December 2023 with a total of 402 months.
+After sourcing the data, we converted all factors data into monthly basis. Then we shifted historical data to the actual data release month to prevent data leakage. Finally, all response and predictors' monthly data are available from July 1990 to December 2023 with a total of 402 months.
 
 ## 2. Feature Engineering
 Raw predictors' data were transformed into 35 candidate regressors using basic mathematical operations. After factor transformation, we applied a two-step factor selection process to select the most significant regressors for predicting the target variable:
