@@ -1,5 +1,5 @@
 # S&P500 Index Long-Short Trading Strategy
-In this project, we selected 8 factors for **predicting S&amp;P 500 index' next-month returns** with **Lasso Regression and variance inflation factor (VIF)**. Then we applied **Ridge Regression, Support Vector Regression (SVR). and Random Forest** respectively for return prediction and achieved **70.37%, 61.73%, and 65.43%** accuracy in return direction prediction. Based on the prediction results, three long-short trading strategy for S&P 500 Index were built and backtested, and the performance of the strategies and S&P 500 Index in time-series are shown in Figure 1.
+In this project, we selected 8 factors for **predicting S&amp;P 500 index's next-month returns** with **Lasso Regression and variance inflation factor (VIF)**. Then we applied **Ridge Regression, Support Vector Regression (SVR). and Random Forest** respectively for return prediction and achieved **70.37%, 61.73%, and 65.43%** accuracy in return direction prediction. Based on the prediction results, three long-short trading strategy for S&P 500 Index were built and backtested, and the performance of the strategies and S&P 500 Index in time-series are shown in Figure 1.
 
 ![alt text](plots/figure1_strategy_performance.png)
 
@@ -139,6 +139,6 @@ With this formula, we can easily break down the predicted value into each factor
 
 ![alt text](plots/figure9_pred_attr3.png)
 
-Figure 7 shows the exposures on each factor. We can observe that the exposures' values are very similar for two months, and we expect the index's return has stable correlation the selected factors. From Figure 9, we can see that the contribution from PSAVERT and VIX_Log_Return_6M changed the most from 2023-12-31 to 2024-01-31. This can be further attributed to the fact that PSAVERT factor value decreases and VIX_LOG_Return_6M value increases during the same period. Summing all the factors contribution together for each month, we will get the predicted value of 0.007317 for 2023-12-31 and 0.005797 for 2024-01-31.
+Figure 7 shows the exposures on each factor. We can observe that the exposures' values are very similar for two months which is expected because the factors' correlation should be stable with S&P 500 Index's return. From Figure 9, we can see that the contribution from PSAVERT and VIX_Log_Return_6M changed the most from 2023-12-31 to 2024-01-31. This can be further attributed to the fact that PSAVERT factor value decreases and VIX_LOG_Return_6M value increases during the same period. Summing all the factors contribution together for each month, we will get the predicted values of 0.007317 abd 0.005797 for 2023-12-31 and 2024-01-31 respectively.
 
 
