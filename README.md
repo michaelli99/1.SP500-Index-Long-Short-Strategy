@@ -106,7 +106,7 @@ Ridge Regression also has the lowest prediction bias with an average prediction 
 **Random Forest ranked last in prediction error.** Random Forest is based on ensembling decision trees, and it results in the most conservative prediction as all of the predicted values fall in the range (-0.02, 0.02) possibly because of the averaging effect of all trees. The prediction R-sqaured of Random Forest is significantly lower than the R-squared of Ridge Regression and SVR, indicating that Random Forest's prediction is not very helpful in explaining the variation of the target variable.  
 **Random Forest ranks second in prediction accuracy and first in positive prediction accuracy.** One advantage of Random Forest is that the model has a positive prediction accuracy of 75.56%, suggesting that Random Forest is most likely to be correct when it predicts the target variable to be positive.  
 
-#### 4.1.4. General observation
+#### 4.1.4. General Observation
 **The R-sqaured for all prediction models are less than 0.15, indicating that the majority of S&P 500 Index's returns are not explained by the models and selected factors.** This is not surprising because our factor universe is limited, and it is not expected to cover all factors that could explain S&P 500 Index's future return. Also, all factors data was based on historical events or expectations. Contingent events may happen during the target month of prediction and impact the index's return. It turns out that all the models achieved more than 60% of prediction direction accuracy with less than 0.15 R-squared.
 
 ### 4.2. Strategy Performance Analysis
