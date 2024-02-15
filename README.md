@@ -24,11 +24,11 @@ The following content is divided into five parts accordingly to elaborate the pr
 ## 1. Data Sourcing
 In this project, we sourced all data from online databases such as Yahoo Finance and FRED. All the indices and factors’ raw data falls into the period of July 1990 to December 2023.
 
-### 1.1. Response/target variable:  
+### 1.1. Response/target Variable:  
 The target varialble of prediction is **S&P 500 Index's next intra-month log returns**. The intra-month log return of month i is calculated with the formula: $$y_i = log(\frac{P_{close, i}}{P_{open, i}})$$
 We chose to use log return because of its potential of being normally distributed, and we used intra-month return so that the prediction can be transformed into actionable trading signal.
    
-### 1.2. Predictors/independent variables:  
+### 1.2. Predictors/independent Variables:  
 To predict the target variable, we first built a pool of candidate regressors with raw predictors data and basic mathematical transformation. The raw data can be classified into three categories: **economic, fundamental, and technical data**. Below is a short description for each category.
 - Economic data includes macroeconomic indicators such as CPI components, employment statistics, and interest rates. Most of them are related to monetary or fiscal policy.
 - Fundamental data consists of valuation data for S&P 500 Index such as earnings, PE, and dividend yield.
@@ -58,7 +58,7 @@ To predict the target variable, we applied three different machine learning mode
 
 The data were divided into training and testing set with the classic 80-20 split. The original sequece of the data was maintained, and we adopted one-month ahead prediction in the testing set.
 
-### 3.1. Training set
+### 3.1. Training Set
 **Training set data spans from 1990-07-31 to 2017-03-31 with a total of 321 data points.** In the training set, we derived the best hyperparameters for each prediction model. Additionally, since there were regularization/penalization components in ridge regression and support vector regression models, regressors had to be standardized/normalized to achieve equal importance in the prediction. Hence the training set was also used to derive the nomralization scalar.  
 Below is a summary of hyperparameters that were derived from the trainings set:
 - **Ridge Regression:**
@@ -75,13 +75,13 @@ Below is a summary of hyperparameters that were derived from the trainings set:
     
 We applied a 5-split time-series cross validation to the training set to derive the best hyperparameters for each prediction model. After getting the best hyperparameters for each model, we used thees hyperparameters in the testing set to predict for the target variable.
 
-### 3.2. Testing set
+### 3.2. Testing Set
 **Testing set data spans from 2017-04-30 to 2023-12-31 with a total of 81 data points.** In the testing set, we used training set's best hyperparameters and scalars, and we adopted one-step ahead prediction. In other words, we trained each model with all available historical data up to the current month when predicting for next month's return.  
 
 ## 4. Performance Evaluation
 After training the model and collecting the prediction results, we evaluated three prediction models from two perspectives: **prediction accuracy and trading strategy's performance**.
 
-### 4.1. Prediction performance analysis
+### 4.1. Prediction Performance Analysis
 In prediction analysis, we summarized each model's prediction mean squared error (MSE), R-squared, and accuracies of predicted return direction in the dataframe, and we also used scatterplots and histograms to visualize the predicted values and prediction errors.
 
 ![alt text](plots/dataframe2_pred_performance.png)
@@ -109,7 +109,7 @@ Ridge Regression also has the lowest prediction bias with an average prediction 
 #### 4.1.4. General observation
 **The R-sqaured for all prediction models are less than 0.15, indicating that the majority of S&P 500 Index's returns are not explained by the models and selected factors.** This is not surprising because our factor universe is limited, and it is not expected to cover all factors that could explain S&P 500 Index's future return. Also, all factors data was based on historical events or expectations. Contingent events may happen during the target month of prediction and impact the index's return. It turns out that all the models achieved more than 60% of prediction direction accuracy with less than 0.15 R-squared.
 
-### 4.2. Strategy performance analysis
+### 4.2. Strategy Performance Analysis
 After collecting the prediction result from each model, we built a long-short trading strategy based on the signs of the predicted returns and backtested the strategy's performance.  
 Suppose the strategy is implemented as follows:
 - If the predicted return is positive, the strategy will take 100% long position on S&P 500 Index at market open of next month and closes the position at market close.
