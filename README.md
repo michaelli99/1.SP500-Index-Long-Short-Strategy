@@ -1,7 +1,7 @@
 # S&P500 Index Long-Short Trading Strategy
 In this project, we selected 8 factors for predicting S&amp;P 500 index' next-month returns with Lasso Regression and variance inflation factor (VIF). Then we applied Ridge Regression, Support Vector Regression (SVR). and Random Forest respectively for return prediction and achieved **70.37%, 61.73%, and 65.43%** accuracy in return direction prediction. Based on the prediction results, three long-short trading strategy for S&P 500 Index were built and backtested, and the performance of the strategies and S&P 500 Index in time-series are shown in Figure 1.
 
-![figure???](plots/figure1_strategy_performance.png)
+![alt text](plots/figure1_strategy_performance.png)
 
 **Please notice that this project is for demonstration only, and it does not provide any investment advice.** <br />
 All data and code are available at the [repository](https://github.com/michaelli99/1.S-P500-Index-Long-Short-Strategy) for replication purpose. <br />
@@ -41,7 +41,7 @@ Raw predictors' data were transformed into 35 candidate regressors using intuiti
 
 After the two steps, 8 regressors were selected from the feature engineering process. The 8 selected regressors consist of 5 macroeconomic factors, 1 fundamental factor, and 2 technical factors. All factors are continuous variables except for EWMA_Cross_Ind1, which is a binary variable that only takes value from 1 and 0. The summary statistics for the 8 selected regressors is shown below:
 
-![alt text](plots/figure1_strategy_performance.png)
+![alt text](plots/dataframe1_factor_stat.png)
 ## 3. Models Training and Testing
 ## 4. Prediction and Strategy Performance Evaluation
 ## 5. Prediction Attribution (Ridge Regression Only)
