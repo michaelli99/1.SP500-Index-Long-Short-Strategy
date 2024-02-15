@@ -3,10 +3,9 @@ In this project, we selected eight factors for predicting S&amp;P 500 index' nex
 
 ![alt text](plots/figure1_strategy_performance.png)
 
-Please notice that this project is for demonstration only and does not provide any investment advice. All data and code are available at [this repository]() for replication purpose. <br />
-The following content is divided into five parts to demonstrate the process and performance of prediction models. The general workflow of the project is shown by the following diagram:
+Please notice that this project is for demonstration only and does not provide any investment advice. All data and code are available at [this repository](https://github.com/michaelli99/1.S-P500-Index-Long-Short-Strategy) for replication purpose. <br />
+The following content is divided into five parts to demonstrate the process and performance of prediction models. The project workflow is shown by the following diagram:
 
-## Workflow
 ```mermaid
 flowchart TD
     A[Data Sourcing] --> B[Feature Selection]
