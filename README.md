@@ -131,7 +131,7 @@ From the following performance time-series plot, we can see that all three strat
 ## 5. Prediction Attribution (Ridge Regression Only)
 
 One advantage of Ridge Regression is its simplicity. The predicted value of Ridge Regression can be written as: $$y = \beta^Tx = \beta_0 x_0 + \beta_1 x_1 + \cdots + \beta_n x_n$$  
-With this formula, we can easily attribute the predicted value into exposures on each factors and factors' values. In the following graphs, we demonstrate this advantage of Ridge Regression using 2023-12-31 and 2024-01-31 as examples and compare the two month's exposures, factors' values, and factors' contribution to alpha side by side.
+With this formula, we can easily break down the predicted value into each factor's contribution to the predicted value. In the following graphs, we demonstrate this advantage of Ridge Regression using 2023-12-31 and 2024-01-31 as examples and compare the two month's exposures, factors' values, and factors' contribution to alpha side by side.
 
 ![alt text](plots/figure7_pred_attr1.png)
 
