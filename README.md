@@ -5,7 +5,7 @@ In this project, we selected 8 factors for **predicting S&amp;P 500 index' next-
 
 **Please notice that this project is for demonstration only, and it does not provide any investment advice.** <br />
 All data and code are available at the [repository](https://github.com/michaelli99/1.S-P500-Index-Long-Short-Strategy) for replication purpose. <br />
-The following content is divided into five parts to demonstrate the process and performance of the prediction models, and the project's workflow is shown by the following diagram:
+The general workflow of the project can be demonstrated by the following diagram:
 
 ```mermaid
 flowchart TD
@@ -19,11 +19,13 @@ flowchart TD
     F --> G["Prediction Attribution (Ridge Regression)"]
 ```
 
+The following content is divided into five parts accordingly to elaborate the process and performance of the prediction models.
+
 ## 1. Data Sourcing
-In this project, we sourced all the data from online databases such as Yahoo Finance and FRED. All the indices and factors’ raw data falls into the period of July 1990 to December 2023.
+In this project, we sourced all data from online databases such as Yahoo Finance and FRED. All the indices and factors’ raw data falls into the period of July 1990 to December 2023.
 
 ### 1.1. Response/target variable:  
-The target varialble of prediction is **S&P 500 Index's next intra-month log returns**. The intra-month log return in month i is calculated with the formula: $$y_i = log(\frac{P_{close, i}}{P_{open, i}})$$
+The target varialble of prediction is **S&P 500 Index's next intra-month log returns**. The intra-month log return of month i is calculated with the formula: $$y_i = log(\frac{P_{close, i}}{P_{open, i}})$$
 We chose to use log return because of its potential of being normally distributed, and we used intra-month return so that the prediction can be transformed into actionable trading signal.
    
 ### 1.2. Predictors/independent variables:  
