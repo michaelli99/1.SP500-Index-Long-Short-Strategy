@@ -91,20 +91,20 @@ In prediction analysis, we summarized each model's prediction mean squared error
 ![alt text](plots/figure6_pred_error_hist.png)
 
 From the above summary statistics table and plots, we have the following observations for each prediction model:
-1. **SVR**  
+#### 4.1.1. SVR
 **SVR model achieved the lowest MSE (0.002267) and the highest R-squared (0.139177) among all three models.** Both MSE and R-squared statistics indicate SVR has the lowest prediction error squared on average. The lowest MSE achieved by SVR model can also be observed from Figure 5 where prediction errors of SVR are generally distributed closer to x-axis.  
 **Surprisingly, SVR has the lowest prediciton direction accuracy (61.73%) among all three models.** The prediction direction accuracy is calculated by dividing the frequency of predicted return and actual return have the same sign by total count of prediction. In Figure 4, the prediction direction accuracy is the proportion of Quadrants II and IV's points in the whole plot. We can see that SVR has more points in Quardrant II than the other two prediction models. If we set negative predicted return as rejecting the null hypothesis, this indicates that SVR has higher chance of being false positive (Type I error). However, we also notice that some of the misclassifed points from SVR are very close to x-axis. This can be explained by the hyperparameter of epsilon in SVR model. **The value of epsilon will define a margin of tolerance where no penalty is given to error, making the model ignore small prediction errors and assigning more extreme valuese as "support vectors". Compared with Ridge Regression and Random Forest, SVR is more robust to less extreme data points and is more accurate for predicting more extreme values.** In the strategy performance evaluation part, we also notice that SVR-based strategy results in better return performance despite the lowest prediciton direction accuracy (or "win ratio").  
 
-2. **Ridge Regression**  
+#### 4.1.2. Ridge Regression
 **Ridge Regression ranks second in MSE and R-squared, and its performance is comparable with SVR.** This could be explained by the fact that we use linear kernel for SVR so that both Ridge Regression and SVR predictions are based on linear transformations of the regressors. From Figure 3, we can observe that Ridge Regression often gives more conservative predictions than SVR. This can be explained by a large regularization constant (alpha) derived from the training set and the hyperparameter epsilon in SVR which ignores small errors for SVR training.  
 **Ridge Regression achieved the best 70.37% return direction prediction accuracy.** This can be observed from Figure 4 where Ridge Regression appears to have the most points in Quadrants I and III.  
 Ridge Regression also has the lowest prediction bias with an average prediction error of 0.001 as shown in Figure 6.
 
-3. **Random Forest**  
+#### 4.1.3. Random Forest
 **Random Forest ranked last in prediction error.** Random Forest is based on ensembling decision trees, and it results in the most conservative prediction as all of the predicted values fall in the range (-0.02, 0.02) possibly because of the averaging effect of all trees. The prediction R-sqaured of Random Forest is significantly lower than the R-squared of Ridge Regression and SVR, indicating that Random Forest's prediction is not very helpful in explaining the variation of the target variable.  
 **Random Forest ranks second in prediction accuracy and first in positive prediction accuracy.** One advantage of Random Forest is that the model has a positive prediction accuracy of 75.56%, suggesting that Random Forest is most likely to be correct when it predicts the target variable to be positive.  
 
-4. **General observation**  
+#### 4.1.4. General observation
 **The R-sqaured for all prediction models are less than 0.15, indicating that the majority of S&P 500 Index's returns are not explained by the models and selected factors.** This is not surprising because our factor universe is limited, and it is not expected to cover all factors that could explain S&P 500 Index's future return. Also, all factors data was based on historical events or expectations. Contingent events may happen during the target month of prediction and impact the index's return. It turns out that all the models achieved more than 60% of prediction direction accuracy with less than 0.15 R-squared.
 
 ## 5. Prediction Attribution (Ridge Regression Only)
