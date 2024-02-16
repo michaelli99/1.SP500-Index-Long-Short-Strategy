@@ -3,6 +3,10 @@ In this project, we selected 8 factors for **predicting S&amp;P 500 index's next
 
 ![alt text](plots/figure1_strategy_performance.png)
 
+Strategies' performance statistics table:
+
+![alt text](plots/dataframe3_strat_performance.png)
+
 **Please notice that this project is for demonstration only, and it does not provide any investment advice.** <br />
 All data and code are available at the [repository](https://github.com/michaelli99/1.S-P500-Index-Long-Short-Strategy) for replication purpose. <br />
 The general workflow of the project can be demonstrated by the following diagram:
