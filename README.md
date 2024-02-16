@@ -23,7 +23,7 @@ flowchart TD
     F --> G["Prediction Attribution (Ridge Regression)"]
 ```
 
-The following content is divided into five parts accordingly to elaborate the process and performance of the prediction models.
+The following content is divided into five parts accordingly to explain the process and performance of the prediction models.
 
 ## 1. Data Sourcing
 In this project, we sourced all data from online databases such as Yahoo Finance and FRED. All the indices and factors’ raw data falls into the period of July 1990 to December 2023.
