@@ -42,8 +42,8 @@ After sourcing the data, we converted all factors data into monthly basis. Then 
 
 ## 2. Feature Engineering
 Raw predictors' data were transformed into 35 candidate regressors using basic mathematical operations. After factor transformation, we applied a two-step factor selection process to select the most significant regressors for predicting the target variable:
-- Step1: Select up to 5 regressors from each sub-category using Lasso regression.
-- Step2: Select the most significant regressors from all categories based on t-score and variance inflation factor (VIF) thresholds.
+- **Step1: Select up to 5 regressors from each sub-category using Lasso regression.**
+- **Step2: Select the most significant regressors from all categories based on t-score and variance inflation factor (VIF) thresholds.**
 
 After the two above steps, 8 regressors were selected from the feature engineering process. The summary statistics for the 8 selected regressors is shown below:
 
