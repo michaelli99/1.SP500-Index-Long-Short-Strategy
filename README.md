@@ -116,8 +116,8 @@ Ridge Regression also has the lowest prediction bias with an average prediction 
 ### 4.2. Strategy Performance Analysis
 After collecting the prediction result from each model, we built a long-short trading strategy based on the signs of the predicted returns and backtested the strategy's performance.  
 Suppose the strategy is implemented as follows:
-- If the predicted return is positive, the strategy will take 100% long position on S&P 500 Index at market open of next month and closes the position at market close.
-- If the predicted return is negative, the strategy will take 100% short position on S&P 500 Index at market open of next month and closes the position at market close.  
+- If the predicted return is positive, the strategy will take 100% long position on S&P 500 Index at market open of next month and close the position at market close.
+- If the predicted return is negative, the strategy will take 100% short position on S&P 500 Index at market open of next month and close the position at market close.  
 
 We ignored any implicit and explicit trasaction costs to simplify the calculation, and we used actual S&P 500 Index as benchmark and backtest all three strategies from 2017-05-01 to 2024-01-31 with a total of 81 months. The strategies's performance statistics and time-series plot are shown below:
 
