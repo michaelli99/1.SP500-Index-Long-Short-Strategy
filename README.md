@@ -26,7 +26,7 @@ flowchart TD
 The following content is divided into five parts accordingly to explain the process and performance of the prediction models.
 
 ## 1. Data Sourcing
-In this project, we sourced all data from online databases such as Yahoo Finance and FRED. All the indices and factors’ raw data falls into the period of July 1990 to December 2023.
+In this project, we sourced all data from publicly available databases such as Yahoo Finance and FRED. All the indices and factors’ raw data falls into the period of July 1990 to December 2023.
 
 ### 1.1. Response/target Variable:  
 The target varialble of prediction is **S&P 500 Index's next intra-month log returns**. The intra-month log return of month i is calculated with the formula: $$y_i = log(\frac{P_{close, i}}{P_{open, i}})$$
