@@ -1,5 +1,5 @@
 # S&P500 Index Long-Short Trading Strategy
-In this project, we selected 8 factors for **predicting S&amp;P 500 index's next-month returns** with **Lasso Regression and variance inflation factor (VIF)**. Then we applied **Ridge Regression, Support Vector Regression (SVR), and Random Forest** respectively for predicting the index return and achieved **70.37%, 61.73%, and 65.43%** accuracy in terms of return direction. Based on the prediction results, we built and backtested three long-short trading strategy for S&P 500 Index, and the performance of the strategies and S&P 500 Index in time-series is shown in Figure 1.
+In this project, our goal is to **predict S&amp;P 500 index's next-month returns**. We selected 8 factors using **Lasso Regression and Variance Inflation Factor (VIF)**. Then we applied **Ridge Regression, Support Vector Regression (SVR), and Random Forest** respectively for predicting the index return and achieved **70.37%, 61.73%, and 65.43%** accuracy in terms of return direction. Based on the prediction results, we built and backtested three long-short trading strategy for S&P 500 Index, and the performance of the strategies and S&P 500 Index in time-series is shown in Figure 1.
 
 ![alt text](plots/figure1_strategy_performance.png)
 
