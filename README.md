@@ -96,6 +96,8 @@ In prediction analysis, we summarized each model's prediction mean squared error
 
 ![alt text](plots/figure6_pred_error_hist.png)
 
+![alt text](plots/figure7_pred_confusion_mat.png)
+
 From the above summary statistics table and plots, we have the following observations for each prediction model:
 #### 4.1.1. SVR
 **SVR model achieved the lowest MSE (0.002267) and the highest R-squared (0.139177) among all three models.** Both MSE and R-squared statistics indicate that SVR has the lowest prediction error squared on average. The lowest MSE achieved by SVR model can also be observed from Figure 5 where prediction errors of SVR are generally distributed closer to x-axis.  
@@ -137,11 +139,11 @@ From the following performance time-series plot, we can see that all three strat
 One advantage of Ridge Regression is its simplicity. The predicted value of Ridge Regression can be written as: $$y = \beta^Tx = \beta_0 x_0 + \beta_1 x_1 + \cdots + \beta_n x_n$$  
 With this formula, we can easily break down the predicted value into each factor's contribution to the predicted value. In the following graphs, we demonstrate this advantage of Ridge Regression using 2023-12-31 and 2024-01-31 as examples and compare the two month's exposures, factors' values, and factors' contribution to alpha side by side.
 
-![alt text](plots/figure7_pred_attr1.png)
+![alt text](plots/figure8_pred_attr1.png)
 
-![alt text](plots/figure8_pred_attr2.png)
+![alt text](plots/figure9_pred_attr2.png)
 
-![alt text](plots/figure9_pred_attr3.png)
+![alt text](plots/figure10_pred_attr3.png)
 
 Figure 7 shows the exposures on each factor. We can observe that the exposures' values are very similar for two months which is expected because the factors' correlation should be stable with S&P 500 Index's return. From Figure 9, we can see that the contribution from PSAVERT and VIX_Log_Return_6M changed the most from 2023-12-31 to 2024-01-31. This can be further attributed to the fact that PSAVERT factor value decreases and VIX_LOG_Return_6M value increases during the same period. Summing all the factors contribution together for each month, we will get the predicted values of 0.007317 abd 0.005797 for 2023-12-31 and 2024-01-31 respectively.
 
