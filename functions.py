@@ -339,38 +339,34 @@ def get_pred_performance(df_pred, y_test):
     df_pred2 = df_pred[:-1]
 
     pred_mse = np.mean(df_pred2.sub(y_test,axis=0)**2)
+    pred_corr = df_pred2.iloc[:,:].corrwith(y_test)
+
     pred_accu = np.mean(df_pred2.mul(y_test,axis=0)>0)
+    conf_matrices = [confusion_matrix(y_test>0, df_pred2[model_name]>0) for model_name in df_pred2.columns]
+    pred_precision = [cm[1,1]/cm[:,1].sum() for cm in conf_matrices]
+    pred_recall = [cm[1,1]/cm[1,:].sum() for cm in conf_matrices]
 
-    matrix_ridge = confusion_matrix(y_test<0, df_pred2['Ridge Regression']<0)
-    matrix_tree = confusion_matrix(y_test<0, df_pred2['Random Forest']<0)
-    matrix_svr = confusion_matrix(y_test<0, df_pred2['SVR']<0)
-    pred_accu_pos = [(matrix_ridge/matrix_ridge.sum(axis = 0)).diagonal()[0],
-                     (matrix_tree/matrix_tree.sum(axis = 0)).diagonal()[0],
-                     (matrix_svr/matrix_svr.sum(axis = 0)).diagonal()[0]]
-    pred_accu_neg = [(matrix_ridge/matrix_ridge.sum(axis = 0)).diagonal()[1],
-                     (matrix_tree/matrix_tree.sum(axis = 0)).diagonal()[1],
-                     (matrix_svr/matrix_svr.sum(axis = 0)).diagonal()[1]]
-
-    pred_corr = df_pred2.iloc[:-1,:].corrwith(y_test)
     pred_next = df_pred.iloc[-1, :]
 
     d = {'prediction_mse': pred_mse,
          'prediction_r_squared': pred_corr**2,
          'prediction_direction_accuracy': pred_accu,
-         'positive_prediction_accuracy': pred_accu_pos,
-         'negative_prediction_accuracy': pred_accu_neg,
-         'prediction_202402': pred_next}
+         'prediction_direction_precision': pred_precision,
+         'prediction_direction_recall': pred_recall,
+         'prediction_next': pred_next}
     
     df_pred_performance = pd.DataFrame(data=d).T
     
-    return df_pred_performance
+    return df_pred_performance, conf_matrices
+
 
 
 def get_strat_performance(df_factor, df_pred, y_test):
+    df_pred2 = df_pred[:-1]
     y_ref = df_factor['Log_Return_1M']
     y_ref.name = 'S&P 500 Index'
 
-    df_return = np.sign(df_pred.iloc[:-1, :]).mul(y_test, axis = 0).shift(1, freq = 'M')
+    df_return = np.sign(df_pred2).mul(y_test, axis = 0).shift(1, freq = 'M')
     df_return = df_return.merge(y_ref, left_index = True, right_index = True)
     df_return = df_return[[y_ref.name] + list(df_return.columns[:-1])]
     df_return_cum = (np.exp(df_return.cumsum()))
@@ -389,15 +385,26 @@ def get_strat_performance(df_factor, df_pred, y_test):
 
     value_at_risk = -np.percentile(np.exp(df_return)-1, 5, interpolation="lower", axis = 0)
 
+    win_rate = (df_return>0).mean()
+    long_months = pd.concat([pd.Series([df_return.shape[0]], index = [df_return.columns[0]]), (df_pred2>0).sum()])
+    short_months = pd.concat([pd.Series([0], index = [df_return.columns[0]]), (df_pred2<0).sum()])
+    position_change = [0]+[((df_pred2[model_name]*df_pred2[model_name].shift(1))<0).sum() for model_name in df_pred2.columns]
+    slugging = [-df_return[model_name][df_return[model_name]>0].mean()/df_return[model_name][df_return[model_name]<0].mean()  
+                for model_name in df_return.columns]
+
     d = {'annualized_return': annualized_return,
          'annualized_excess_return': annualized_excess_return,
          'annualized_volatility': annualized_vol,
          'sharpe_ratio': sharpe_ratio,
          'maximum_drawdown': max_drawdown,
          'calmar_ratio': calmar_ratio,
-         'monthly_95pct_VaR': value_at_risk}
+         'monthly_95pct_VaR': value_at_risk,
+         'win_rate': win_rate,
+         'long_months': long_months,
+         'short_months': short_months,
+         'position_change': position_change,
+         'slugging': slugging}
     df_strat_performance = pd.DataFrame(data=d).T
     
     return df_strat_performance, df_return, df_return_cum
-
 
