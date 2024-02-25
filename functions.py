@@ -385,10 +385,10 @@ def get_strat_performance(df_factor, df_pred, y_test):
 
     value_at_risk = -np.percentile(np.exp(df_return)-1, 5, interpolation="lower", axis = 0)
 
-    win_rate = (df_return>0).mean()
     long_months = pd.concat([pd.Series([df_return.shape[0]], index = [df_return.columns[0]]), (df_pred2>0).sum()])
     short_months = pd.concat([pd.Series([0], index = [df_return.columns[0]]), (df_pred2<0).sum()])
     position_change = [0]+[((df_pred2[model_name]*df_pred2[model_name].shift(1))<0).sum() for model_name in df_pred2.columns]
+    win_rate = (df_return>0).mean()
     slugging = [-df_return[model_name][df_return[model_name]>0].mean()/df_return[model_name][df_return[model_name]<0].mean()  
                 for model_name in df_return.columns]
 
@@ -399,10 +399,10 @@ def get_strat_performance(df_factor, df_pred, y_test):
          'maximum_drawdown': max_drawdown,
          'calmar_ratio': calmar_ratio,
          'monthly_95pct_VaR': value_at_risk,
-         'win_rate': win_rate,
          'long_months': long_months,
          'short_months': short_months,
          'position_change': position_change,
+          'win_rate': win_rate,
          'slugging': slugging}
     df_strat_performance = pd.DataFrame(data=d).T
     
