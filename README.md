@@ -1,7 +1,12 @@
-# S&P500 Index Long-Short Trading Strategy
-In this project, our goal is to **predict S&amp;P 500 index's next-month returns**. We selected 8 factors using **Lasso Regression and Variance Inflation Factor (VIF)**. Then we applied **Ridge Regression, Support Vector Regression (SVR), and Random Forest** respectively for predicting the index return and achieved **70.37%, 61.73%, and 65.43%** accuracy in terms of return direction. Based on the prediction results, we built and backtested three long-short trading strategy for S&P 500 Index, and the hypothetical performance of the strategies is compared with S&P 500 Index and shown in Figure 1.
+# S&P500 Index Return Direction Prediction
+In this project, our goal is to **predict S&amp;P 500 index's next-month return's direction**. We collected macroeonomic, fundamental, and price data from online sources and selected 6 revelant factors using a **Variance Inflation Factor (VIF)** threshold, a t-score threshold and **LASSO Regression**. Then we applied **Ridge Regression, Support Vector Regression (SVR), and Random Forest** respectively for predicting the index return direction. We chose to use regression models instead of classification models because regression models can extract more information from the target variable. For example, both a -15% return and a -1% will be classified as negative returns and have the same penalty for false prediction in a classification problem, but regression models will distinguish between the two returns and penalize based on the deviations between predicted returns and actual returns.
 
-![alt text](plots/figure1_strategy_performance.png)
+Our models achieved **67.90%, 59.26%, and 61.73%** accuracy in terms of return direction. The summary statistics for prediction performance are shown as follows:
+
+
+
+Based on the prediction results, we also built and backtested three long-short trading strategy for S&P 500 Index, and the hypothetical performance of the strategies is compared with S&P 500 Index.
+
 
 Strategies' performance statistics table:
 
