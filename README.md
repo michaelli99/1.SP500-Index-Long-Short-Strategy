@@ -1,18 +1,16 @@
 # S&P500 Index Return Direction Prediction
-In this project, our goal is to **predict S&amp;P 500 index's next-month return's direction**. We collected macroeonomic, fundamental, and price data and selected 6 revelant factors using a **Variance Inflation Factor (VIF)** threshold, a t-score threshold, and **LASSO Regression**. Then we applied **Ridge Regression, Support Vector Regression (SVR), and Random Forest** respectively for predicting the index return direction. We chose to use regression models instead of classification models because regression models can extract more information from the target variable. For example, both a -15% return and a -1% will be classified as negative returns and have the same penalty for false predictions in a classification problem, but regression models will distinguish between the two returns and penalize based on the deviations between predicted returns and actual returns.
+In this project, our goal is to **predict S&amp;P 500 index's next-month return's direction**. We collected economic, fundamental, and price data and selected 6 revelant factors using a **variance inflation factor (VIF)** threshold, a t-score threshold, and **LASSO Regression**. Then we applied **Ridge Regression, Support Vector Regression (SVR), and Random Forest** respectively for predicting the index return direction. We chose to use regression models instead of classification models because regression models can extract more information from the target variable. For example, both a -15% return and a -1% will be classified as negative returns and have the same penalty for false predictions in a classification problem, but regression models will distinguish between the two returns and penalize based on the deviations between predicted returns and actual returns.
 
 Our models achieved **67.90%, 59.26%, and 61.73%** accuracy in terms of return direction. The summary statistics for prediction performance are shown as follows:
 
-![alt text](plots/dataframe2_pred_performance.png)
+![alt text](plots/dataframe1_pred_performance.png)
 
-Based on the prediction results, we also built and backtested three long-short trading strategy for S&P 500 Index, and the hypothetical performance of the strategies is compared with S&P 500 Index.
+Based on the prediction results, we also built and backtested three long-short trading strategy for S&P 500 Index, and the hypothetical performance of the strategies is compared with S&P 500 Index and shown below.
 
-Strategies' performance statistics table:
+![alt text](plots/figure1_strategy_performance.png)
 
-![alt text](plots/dataframe3_strat_performance.png)
-
-**Please notice that this project is for demonstration only, and it does not provide any investment advice.** <br />
-All data and code are available at the [repository](https://github.com/michaelli99/1.S-P500-Index-Long-Short-Strategy) for replication purpose. <br />
+**Please notice that this project is for demonstration of using machine learning models, and we do not provide any investment advice.** <br />
+All data and code are available at the [repository](https://github.com/michaelli99/1.S-P500-Index-Return-Prediction) for replication purpose. <br />
 The general workflow of the project can be demonstrated by the following diagram:
 
 ```mermaid
@@ -30,36 +28,36 @@ flowchart TD
 The following content is divided into five parts accordingly to explain the process and performance of the prediction models.
 
 ## 1. Data Sourcing
-In this project, we sourced all data from publicly available databases such as Yahoo Finance and FRED. All the indices and factors’ raw data falls into the period of July 1990 to December 2023.
+In this project, we sourced all data from publicly available databases such as Yahoo Finance and FRED. All the indices and factors’ raw data falls into the period of July 1990 to February 2024.
 
 ### 1.1. Response/target Variable:  
-The target varialble of prediction is **S&P 500 Index's next intra-month log returns**. The intra-month log return of month i is calculated with the formula: $$y_i = log(\frac{P_{close, i}}{P_{open, i}})$$
-We chose to use log return because of its potential of being normally distributed, and we used intra-month return so that the prediction can be transformed into actionable trading signal.
+The target varialble of regression models is **S&P 500 Index's next intra-month log return**. The intra-month log return of month i is calculated with the formula: $$y_i = log(\frac{P_{close, i}}{P_{open, i}})$$
+We chose to use log return because of its potential of being normally distributed, and we used intra-month return for the trading strategy backtest purpose
    
 ### 1.2. Predictors/independent Variables:  
 To predict the target variable, we first built a pool of candidate regressors with raw predictors data and basic mathematical transformation. The raw data can be classified into three categories: **economic, fundamental, and technical data**. Below is a short description for each category.
-- Economic data includes macroeconomic indicators such as CPI components, employment statistics, and interest rates. Most of them are related to monetary or fiscal policy.
-- Fundamental data consists of valuation data for S&P 500 Index such as earnings, PE, and dividend yield.
+- Economic data includes macroeconomic indicators such as CPI components, employment statistics, and interest rates. Most of them are related to monetary or fiscal policy and are sourced from [FRED](https://fred.stlouisfed.org/).
+- Fundamental data consists of valuation data for S&P 500 Index such as earnings, PE, and dividend yield and is sourced from https://www.multpl.com/.
 - Technical data was derived from S&P 500 Index and VIX's historical prices and trading volume.
 
-After sourcing the data, we converted all factors data into monthly basis. Then we shifted historical data to the actual data release month to prevent data leakage. Finally, all response and predictors' monthly data are available from July 1990 to December 2023 with a total of 402 months.
+After sourcing the data, we converted all factors data into monthly basis. Then we shifted historical data to the actual data release month to prevent data leakage. Finally, all response and predictors' monthly data are available from July 1990 to January 2024 with a total of 403 months.
 
 ## 2. Feature Engineering
-Raw predictors' data were transformed into 35 candidate regressors using basic mathematical operations. After factor transformation, we applied a two-step factor selection process to select the most significant regressors for predicting the target variable:
+Raw predictors' data were transformed into 32 candidate regressors using basic mathematical operations. After factor transformation, we applied a two-step factor selection process to select the most significant regressors for predicting the target variable:
 - **Step1: Select up to 5 regressors from each sub-category using Lasso regression.**
 - **Step2: Select the most significant regressors from all categories based on t-score and variance inflation factor (VIF) thresholds.**
 
-After the two above steps, 8 regressors were selected from the feature engineering process. The summary statistics for the 8 selected regressors is shown below:
+After the two above steps, 6 regressors were selected from the feature engineering process. The summary statistics for the 6 selected regressors is shown below:
 
 ![alt text](plots/dataframe1_factor_stat.png)
 
-The 8 selected regressors consist of 5 macroeconomic factors, 1 fundamental factor, and 2 technical factors. All regressors are continuous variables except for EWMA_Cross_Ind1, which is a binary variable that only takes value from 1 and 0. Shown below are the regressors' distribution and time series plots: 
+The 6 selected regressors consist of 4 macroeconomic factors, 1 fundamental factor, and 1 technical factor. All regressors are continuous variables. Shown below are the regressors' distribution and time series plots: 
 
 ![alt text](plots/figure2_factors_dist.png)
 
 ![alt text](plots/figure3_factors_ts.png)
 
-All of the following prediction models are based on the assumption/prior of **the 8 selected factors' association with S&P 500 Index's next month return is not changed**.
+All of the following prediction models are generally based on the assumption/prior of the 6 selected factors' association with S&P 500 Index's next month return will not changed.
 
 ## 3. Models Training and Testing
 To predict the target variable, we applied three different machine learning models: **Ridge Regression, Support Vector Regression (SVR), and Random Forest**.
@@ -94,13 +92,13 @@ In prediction analysis, we summarized each model's prediction mean squared error
 
 ![alt text](plots/dataframe2_pred_performance.png)
 
-![alt text](plots/figure4_pred_return_plot.png)
+![alt text](plots/figure4_pred_confusion_mat.png)
 
-![alt text](plots/figure5_pred_error_plot.png)
+![alt text](plots/figure5_pred_return_plot.png)
 
-![alt text](plots/figure6_pred_error_hist.png)
+![alt text](plots/figure6_pred_error_plot.png)
 
-![alt text](plots/figure7_pred_confusion_mat.png)
+![alt text](plots/figure7_pred_error_hist.png)
 
 From the above summary statistics table and plots, we have the following observations for each prediction model:
 #### 4.1.1. SVR
