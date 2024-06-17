@@ -1,5 +1,5 @@
 # S&P500 Index Return Direction Prediction
-In this project, we applied multiple machine learning algorithms and economic data to **predict S&amp;P 500 index's next-month return's direction**. Our best model achieved a prediction accuracy of 67.90% in an 81-month out-of-sample test set. The summary statistics for prediction performance are shown as follows:
+In this project, we applied multiple machine learning algorithms and economic data to **predict S&amp;P 500 index's next-month return's direction**. Our best model achieved a prediction accuracy of **67.90%** (Ridge Regression) in an 81-month out-of-sample test set. The summary statistics for prediction performance are shown as follows:
 
 ![alt text](plots/dataframe2_pred_performance.png)
 
@@ -30,11 +30,11 @@ We collected economic, fundamental, and price data and selected 6 revelant facto
 ## 1. Data Sourcing
 In this project, we sourced all data from publicly available databases such as FRED and Yahoo Finance. All the indices and factors’ raw data falls into the period of July 1990 to February 2024.
 
-### 1.1. Response/target Variable:  
+### 1.1. Response/Target Variable:  
 The target varialble of the regression models is **S&P 500 Index's next intramonth return direction**. In this project, we will apply regression models to predict the index's next intra-month log return and use the sign of the predicted return as the final prediction result. The intra-month log return of month i is calculated by the formula: $$y_i = log(\frac{P_{close, i}}{P_{open, i}})$$
-We chose to use log return because of its potential of being normally distributed, and we used intra-month return for the trading strategy backtest purpose.We chose to use regression models instead of classification models because regression models can extract more information from the target variable. For example, both a -15% return and a -1% will be classified as negative returns and have the same penalty for false predictions in a classification problem, but regression models will distinguish between the two returns and penalize based on the deviations between predicted returns and actual returns.
+We chose to use log return because of its potential of being normally distributed, and we used intra-month return for the trading strategy backtest purpose. We chose to use regression models instead of classification models because regression models can extract more information from the target variable. For example, both a -15% return and a -1% will be classified as negative returns and have the same penalty for false predictions in a classification problem, but regression models will distinguish between the two returns and penalize based on the deviations between predicted returns and actual returns.
    
-### 1.2. Predictors/independent Variables:  
+### 1.2. Predictors/Independent Variables:  
 To predict the target variable, we first built a pool of candidate regressors with raw predictors data and basic mathematical transformation. The raw data can be classified into three categories: **economic, fundamental, and technical data**. Below is a short description for each category.
 - Economic data includes macroeconomic indicators such as CPI components, employment statistics, and interest rates. Most of them are related to monetary or fiscal policy and are sourced from [FRED](https://fred.stlouisfed.org/).
 - Fundamental data consists of valuation data for S&P 500 Index such as earnings, PE, and dividend yield and is sourced from https://www.multpl.com/.
@@ -42,7 +42,7 @@ To predict the target variable, we first built a pool of candidate regressors wi
 
 After sourcing the data, we converted all factors data into monthly basis. Then we shifted historical data to the actual data release month to prevent data leakage. Finally, all response and predictors' monthly data are available from July 1990 to January 2024 with a total of 403 months.
 
-## 2 Training and Testing Split
+## 2 Train-test Split
 After sourcing the data, we divided the dataset into training and testing set with the classic 80-20 split. The original sequece of the data was maintained, and we adopted one-month ahead prediction in the testing set.
 
 ### 2.1.1 Training Set
@@ -74,26 +74,31 @@ After the two above steps, 6 regressors were selected from the feature engineeri
 
 ![alt text](plots/dataframe1_factor_stat.png)
 
-The 6 selected regressors consist of 4 macroeconomic factors, 1 fundamental factor, and 1 technical factor. All regressors are continuous variables. Shown below are the regressors' distribution and time series plots: 
+The 6 selected regressors consist of 4 macroeconomic factors (fctr_inflation22, fctr_personalsaving, fctr_fedfunds_spread, and fctr_inflation_exp), 1 fundamental factor (fctr_gep_ratio), and 1 technical factor (fctr_volumn_return). All regressors are continuous variables. The distribution and time series plots for the selected regressors are shown below: 
 
 ![alt text](plots/figure2_factors_dist.png)
 
 ![alt text](plots/figure3_factors_ts.png)
 
-All of the following prediction models are generally based on the assumption/prior of the 6 selected factors' association with S&P 500 Index's next month return will not change.
+The following prediction models are generally based on the assumption/prior of the 6 selected factors' association with S&P 500 Index's next month return will not change.
 
 To predict S&P 500 Index's next intramonth return, we applied three different machine learning models: **Ridge Regression, Support Vector Regression (SVR), and Random Forest**.
 
 
 ## 4. Performance Evaluation
-After training the model and collecting the prediction results, we evaluated three prediction models from two perspectives: **prediction accuracy and trading strategy's performance**.
+After training the model and collecting the prediction results, we evaluated three prediction models from two perspectives: **prediction performance and trading strategy's performance**.
 
 ### 4.1. Prediction Performance Analysis
-In prediction analysis, we summarized each model's prediction mean squared error (MSE), R-squared, and accuracies of predicted return direction in the dataframe, and we also used scatterplots and histograms to visualize the predicted values and prediction errors.
+In prediction analysis, we evaluate each model's performance based on **precision** and **recall**, and we also calculated the accuracy and F1 score for each model. Their formulas are shown below:
+$y_i = log(\frac{P_{close, i}}{P_{open, i}})$
+
+We summarized each model's prediction accuracy, precision, recall and F1 score in the dataframe. 
 
 ![alt text](plots/dataframe2_pred_performance.png)
 
 ![alt text](plots/figure4_pred_confusion_mat.png)
+
+We also used scatterplots and histograms to visualize the predicted values and prediction errors.
 
 ![alt text](plots/figure5_pred_return_plot.png)
 
@@ -102,14 +107,17 @@ In prediction analysis, we summarized each model's prediction mean squared error
 ![alt text](plots/figure7_pred_error_hist.png)
 
 From the above summary statistics table and plots, we have the following observations for each prediction model:
-#### 4.1.1. SVR
-**SVR model achieved the lowest MSE (0.002267) and the highest R-squared (0.139177) among all three models.** Both MSE and R-squared statistics indicate that SVR has the lowest prediction error squared on average. The lowest MSE achieved by SVR model can also be observed from Figure 5 where prediction errors of SVR are generally distributed closer to x-axis.  
+#### 4.1.1. Ridge Regression
+**The return direction prediction results based on ridge regression achieved the highest accuracy, precision, recall, and F1 score across all three models.** The highest accuracy indicates that ridge regression's prediction has the highest overall prediction performance. The highest precision suggests that when rigde regression generates positive prediction, it has the highest probability of being correct, and the highest recall signifies the model captures the among all actual positive returns.
+indicate that SVR has the lowest prediction error squared on average. The lowest MSE achieved by SVR model can also be observed from Figure 5 where prediction errors of SVR are generally distributed closer to x-axis.  
 **However, SVR also has the lowest prediciton direction accuracy (61.73%) among all three models.** The prediction direction accuracy is calculated by dividing the frequency of predicted return and actual return have the same sign by total count of prediction. In Figure 4, the prediction direction accuracy is the proportion of Quadrants II and IV's points in the whole plot. We can see that SVR has more points in Quardrant II than the other two prediction models. If we set negative predicted return as not rejecting the null hypothesis, this suggests that SVR has higher chance of being false negative (Type II error). However, we also notice that some of the misclassifed points from SVR are very close to x-axis. This can be explained by the hyperparameter of epsilon in SVR model. **The value of epsilon will define a margin of tolerance where no penalty is given to prediction errors within the margin, making the model ignore small prediction errors and assigning more extreme valuese as "support vectors". Compared with Ridge Regression and Random Forest, SVR is more robust to less extreme data points and performs better when predicting more extreme values.** In the strategy performance evaluation part, we also notice that SVR-based strategy results in better return performance despite the lowest prediciton direction accuracy (or "win ratio").  
-
-#### 4.1.2. Ridge Regression
 **Ridge Regression ranks second in MSE and R-squared, and its performance in prediction errors is comparable with SVR.** This could be explained by the fact that we use linear kernel for SVR so that both Ridge Regression and SVR predictions are based on linear transformations of the regressors. From Figure 4, we can observe that Ridge Regression often gives more conservative predictions than SVR. This can be explained by a large regularization constant (alpha) derived from the training set and the hyperparameter epsilon in SVR which ignores small errors for SVR training.  
 **Ridge Regression achieved the best 70.37% return direction prediction accuracy.** This can be observed from Figure 4 where Ridge Regression appears to have the most points in Quadrants I and III.  
 Ridge Regression also has the lowest prediction bias with an average prediction error of 0.001 as shown in Figure 6.
+
+#### 4.1.2. SVR
+**SVR model achieved the lowest MSE (0.002267) and the highest R-squared (0.139177) among all three models.** Both MSE and R-squared statistics indicate that SVR has the lowest prediction error squared on average. The lowest MSE achieved by SVR model can also be observed from Figure 5 where prediction errors of SVR are generally distributed closer to x-axis.  
+**However, SVR also has the lowest prediciton direction accuracy (61.73%) among all three models.** The prediction direction accuracy is calculated by dividing the frequency of predicted return and actual return have the same sign by total count of prediction. In Figure 4, the prediction direction accuracy is the proportion of Quadrants II and IV's points in the whole plot. We can see that SVR has more points in Quardrant II than the other two prediction models. If we set negative predicted return as not rejecting the null hypothesis, this suggests that SVR has higher chance of being false negative (Type II error). However, we also notice that some of the misclassifed points from SVR are very close to x-axis. This can be explained by the hyperparameter of epsilon in SVR model. **The value of epsilon will define a margin of tolerance where no penalty is given to prediction errors within the margin, making the model ignore small prediction errors and assigning more extreme valuese as "support vectors". Compared with Ridge Regression and Random Forest, SVR is more robust to less extreme data points and performs better when predicting more extreme values.** In the strategy performance evaluation part, we also notice that SVR-based strategy results in better return performance despite the lowest prediciton direction accuracy (or "win ratio").  
 
 #### 4.1.3. Random Forest
 **Random Forest ranked last in prediction error.** Random Forest is based on ensembling decision trees, and it results in the most conservative prediction as all of the predicted values fall in the range (-0.02, 0.02) possibly because of the averaging effect of all trees. The prediction R-sqaured of Random Forest is significantly lower than the R-squared of Ridge Regression and SVR, indicating that Random Forest's prediction is not very helpful in explaining the variation of the target variable.  
