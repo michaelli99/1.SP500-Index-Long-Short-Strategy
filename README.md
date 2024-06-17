@@ -89,8 +89,9 @@ To predict S&P 500 Index's next intramonth return, we applied three different ma
 After training the model and collecting the prediction results, we evaluated three prediction models from two perspectives: **prediction performance and trading strategy's performance**.
 
 ### 4.1. Prediction Performance Analysis
-In prediction analysis, we evaluate each model's performance based on **precision** and **recall**, and we also calculated the accuracy and F1 score for each model. Their formulas are shown below:
+In prediction performance analysis, we evaluate each model's performance based on their **precision** and **recall**, and we also calculated the accuracy and F1 score for each model. We use the following formulas to calculate the precision, recall, accuracy, and F1 score:
 
+$TP = True \hspace positive$
 $precision (P) = \frac{TP}{(TP+FP)}$
 
 We summarized each model's prediction accuracy, precision, recall and F1 score in the dataframe. 
