@@ -90,7 +90,8 @@ After training the model and collecting the prediction results, we evaluated thr
 
 ### 4.1. Prediction Performance Analysis
 In prediction analysis, we evaluate each model's performance based on **precision** and **recall**, and we also calculated the accuracy and F1 score for each model. Their formulas are shown below:
-$y_i = log(\frac{P_{close, i}}{P_{open, i}})$
+
+$precision (P) = \frac{TP}{(TP+FP)}$
 
 We summarized each model's prediction accuracy, precision, recall and F1 score in the dataframe. 
 
