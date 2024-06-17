@@ -1,16 +1,15 @@
 # S&P500 Index Return Direction Prediction
-In this project, our goal is to **predict S&amp;P 500 index's next-month return's direction**. We collected economic, fundamental, and price data and selected 6 revelant factors using a **variance inflation factor (VIF)** threshold, a t-score threshold, and **LASSO Regression**. Then we applied **Ridge Regression, Support Vector Regression (SVR), and Random Forest** respectively for predicting the index return direction. We chose to use regression models instead of classification models because regression models can extract more information from the target variable. For example, both a -15% return and a -1% will be classified as negative returns and have the same penalty for false predictions in a classification problem, but regression models will distinguish between the two returns and penalize based on the deviations between predicted returns and actual returns.
+In this project, we applied multiple machine learning algorithms and economic data to **predict S&amp;P 500 index's next-month return's direction**. Our best model achieved a prediction accuracy of 67.90% in an 81-month out-of-sample test set. The summary statistics for prediction performance are shown as follows:
 
-Our models achieved **67.90%, 59.26%, and 61.73%** accuracy in terms of return direction. The summary statistics for prediction performance are shown as follows:
-
-![alt text](plots/dataframe1_pred_performance.png)
+![alt text](plots/dataframe2_pred_performance.png)
 
 Based on the prediction results, we also built and backtested three long-short trading strategy for S&P 500 Index, and the hypothetical performance of the strategies is compared with S&P 500 Index and shown below.
 
 ![alt text](plots/figure1_strategy_performance.png)
 
-**Please notice that this project is for demonstration of using machine learning models, and we do not provide any investment advice.** <br />
+**Please notice that this project is for demonstration only, and it is not intended for any investment advice.** <br />
 All data and code are available at the [repository](https://github.com/michaelli99/1.S-P500-Index-Return-Prediction) for replication purpose. <br />
+
 The general workflow of the project can be demonstrated by the following diagram:
 
 ```mermaid
@@ -25,14 +24,15 @@ flowchart TD
     F --> G["Prediction Attribution (Ridge Regression)"]
 ```
 
-The following content is divided into five parts accordingly to explain the process and performance of the prediction models.
+The following content is divided into five parts to explain the process and performance of the prediction models.
 
+We collected economic, fundamental, and price data and selected 6 revelant factors using a **variance inflation factor (VIF)** threshold, a t-score threshold, and **LASSO Regression**. Then we applied **Ridge Regression, Support Vector Regression (SVR), and Random Forest** respectively for predicting the index return direction. 
 ## 1. Data Sourcing
-In this project, we sourced all data from publicly available databases such as Yahoo Finance and FRED. All the indices and factors’ raw data falls into the period of July 1990 to February 2024.
+In this project, we sourced all data from publicly available databases such as FRED and Yahoo Finance. All the indices and factors’ raw data falls into the period of July 1990 to February 2024.
 
 ### 1.1. Response/target Variable:  
-The target varialble of regression models is **S&P 500 Index's next intra-month log return**. The intra-month log return of month i is calculated with the formula: $$y_i = log(\frac{P_{close, i}}{P_{open, i}})$$
-We chose to use log return because of its potential of being normally distributed, and we used intra-month return for the trading strategy backtest purpose
+The target varialble of the regression models is **S&P 500 Index's next intramonth return direction**. In this project, we will apply regression models to predict the index's next intra-month log return and use the sign of the predicted return as the final prediction result. The intra-month log return of month i is calculated by the formula: $$y_i = log(\frac{P_{close, i}}{P_{open, i}})$$
+We chose to use log return because of its potential of being normally distributed, and we used intra-month return for the trading strategy backtest purpose.We chose to use regression models instead of classification models because regression models can extract more information from the target variable. For example, both a -15% return and a -1% will be classified as negative returns and have the same penalty for false predictions in a classification problem, but regression models will distinguish between the two returns and penalize based on the deviations between predicted returns and actual returns.
    
 ### 1.2. Predictors/independent Variables:  
 To predict the target variable, we first built a pool of candidate regressors with raw predictors data and basic mathematical transformation. The raw data can be classified into three categories: **economic, fundamental, and technical data**. Below is a short description for each category.
@@ -41,6 +41,29 @@ To predict the target variable, we first built a pool of candidate regressors wi
 - Technical data was derived from S&P 500 Index and VIX's historical prices and trading volume.
 
 After sourcing the data, we converted all factors data into monthly basis. Then we shifted historical data to the actual data release month to prevent data leakage. Finally, all response and predictors' monthly data are available from July 1990 to January 2024 with a total of 403 months.
+
+## 2 Training and Testing Split
+After sourcing the data, we divided the dataset into training and testing set with the classic 80-20 split. The original sequece of the data was maintained, and we adopted one-month ahead prediction in the testing set.
+
+### 2.1.1 Training Set
+**Training set data spans from 1990-07-31 to 2017-04-30 with a total of 322 data points.** We used the training set to select factors and derive the best hyperparameters for each prediction model. Additionally, since there were regularization/penalization components in ridge regression and support vector regression models, regressors had to be standardized/normalized to achieve equal importance in the prediction. Hence, the training set was also used to derive the nomralization scalar.  
+Below is a summary of hyperparameters that were derived from the training set:
+- **Ridge Regression:**
+    - Alpha: Constant that multiplies the L2 term, controlling regularization strength.
+    - Normalization scalar: $\mu$ and $\sigma$.
+- **Support Vector Regression:**
+    - C: Regularization parameter that inversely relates to the strength of the regularization.
+    - epsilon: The epsilon-tube within which no penalty is associated in the training loss function with points predicted within a distance epsilon from the actual value.
+    - Normalization scalar: $\mu$ and $\sigma$.
+- **Random Forest:**
+    - The number of trees n.
+    - The maximum depth of the tree.
+    - The minimum number of samples required to split an internal node.
+    
+We applied a 5-split time-series cross validation to the training set to derive the best hyperparameters for each prediction model. After getting the best hyperparameters for each model, we used thees hyperparameters in the testing set to predict for the target variable.
+
+### 2.1.2 Testing Set
+**Testing set data spans from 2017-04-30 to 2023-12-31 with a total of 81 data points.** In the testing set, we used training set's best hyperparameters and scalars, and we adopted one-step ahead prediction. In other words, we trained each model with all available historical data up to the current month when predicting for next month's return.  
 
 ## 2. Feature Engineering
 Raw predictors' data were transformed into 32 candidate regressors using basic mathematical operations. After factor transformation, we applied a two-step factor selection process to select the most significant regressors for predicting the target variable:
@@ -57,32 +80,10 @@ The 6 selected regressors consist of 4 macroeconomic factors, 1 fundamental fact
 
 ![alt text](plots/figure3_factors_ts.png)
 
-All of the following prediction models are generally based on the assumption/prior of the 6 selected factors' association with S&P 500 Index's next month return will not changed.
+All of the following prediction models are generally based on the assumption/prior of the 6 selected factors' association with S&P 500 Index's next month return will not change.
 
-## 3. Models Training and Testing
-To predict the target variable, we applied three different machine learning models: **Ridge Regression, Support Vector Regression (SVR), and Random Forest**.
+To predict S&P 500 Index's next intramonth return, we applied three different machine learning models: **Ridge Regression, Support Vector Regression (SVR), and Random Forest**.
 
-The data were divided into training and testing set with the classic 80-20 split. The original sequece of the data was maintained, and we adopted one-month ahead prediction in the testing set.
-
-### 3.1. Training Set
-**Training set data spans from 1990-07-31 to 2017-03-31 with a total of 321 data points.** In the training set, we derived the best hyperparameters for each prediction model. Additionally, since there were regularization/penalization components in ridge regression and support vector regression models, regressors had to be standardized/normalized to achieve equal importance in the prediction. Hence the training set was also used to derive the nomralization scalar.  
-Below is a summary of hyperparameters that were derived from the training set:
-- **Ridge Regression:**
-    - Alpha: Constant that multiplies the L2 term, controlling regularization strength.
-    - Normalization scalar: $\mu$ and $\sigma$.
-- **Support Vector Regression:**
-    - C: Regularization parameter that inversely relates to the strength of the regularization.
-    - epsilon: The epsilon-tube within which no penalty is associated in the training loss function with points predicted within a distance epsilon from the actual value.
-    - Normalization scalar: $\mu$ and $\sigma$.
-- **Random Forest:**
-    - The number of trees n.
-    - The maximum depth of the tree.
-    - The minimum number of samples required to split an internal node.
-    
-We applied a 5-split time-series cross validation to the training set to derive the best hyperparameters for each prediction model. After getting the best hyperparameters for each model, we used thees hyperparameters in the testing set to predict for the target variable.
-
-### 3.2. Testing Set
-**Testing set data spans from 2017-04-30 to 2023-12-31 with a total of 81 data points.** In the testing set, we used training set's best hyperparameters and scalars, and we adopted one-step ahead prediction. In other words, we trained each model with all available historical data up to the current month when predicting for next month's return.  
 
 ## 4. Performance Evaluation
 After training the model and collecting the prediction results, we evaluated three prediction models from two perspectives: **prediction accuracy and trading strategy's performance**.
