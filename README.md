@@ -42,7 +42,7 @@ To predict the target variable, we first built a pool of candidate regressors wi
 
 After sourcing the data, we converted all factors data into monthly basis. Then we shifted historical data to the actual data release month to prevent data leakage. Finally, all response and predictors' monthly data are available from July 1990 to January 2024 with a total of 403 months.
 
-## 2 Train-test Split
+## 2. Train-test Split
 After sourcing the data, we divided the dataset into training and testing set with the classic 80-20 split. The original sequece of the data was maintained, and we adopted one-month ahead prediction in the testing set.
 
 ### 2.1.1 Training Set
