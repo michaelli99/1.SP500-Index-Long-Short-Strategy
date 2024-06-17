@@ -606,11 +606,14 @@ def get_pred_performance(df_pred, y_test):
     pred_f1 = 2*pred_precision*pred_recall/(pred_precision+pred_recall)
 
     pred_next = np.array(['Positive' if i>=0 else 'Negative' for i in df_pred.iloc[-1, :]])
+    
+    pred_mse = np.mean(df_pred2.sub(y_test,axis=0)**2)
 
     d = {'Accuracy': pred_accu,
          'Precision': pred_precision,
          'Recall': pred_recall,
          'F1 Score': pred_f1,
+         'MSE': pred_mse,
          'Prediction (Mar-2024)': pred_next}
 
     df_pred_performance = pd.DataFrame(data=d).T
