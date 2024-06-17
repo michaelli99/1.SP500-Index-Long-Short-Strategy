@@ -89,7 +89,7 @@ To predict S&P 500 Index's next intramonth return, we applied three different ma
 After training the model and collecting the prediction results, we evaluated three prediction models from two perspectives: **prediction performance and trading strategy's performance**.
 
 ### 4.1. Prediction Performance Analysis
-In prediction performance analysis, we evaluate each model's performance based on their **precision** and **recall**, and we also calculated the accuracy and F1 score for each model. We use the following formulas to calculate the precision, recall, accuracy, and F1 score:
+In prediction performance analysis, we evaluate each model's performance based on their **precision** and **recall**, and we also calculated the **accuracy** and **F1 score** for each model. We use the following formulas to calculate the precision, recall, accuracy, and F1 score:
 
 $TP = True\ positive$
 
@@ -107,7 +107,7 @@ $Accuracy = \frac{TP+TN}{(TP+FP+TN+FN)}$
 
 $F1\ score = \frac{2 \times P \times R}{(P+R)}$
 
-We summarized each model's prediction accuracy, precision, recall and F1 score in the dataframe. 
+We summarized each model's prediction accuracy, precision, recall and F1 score in the dataframe.
 
 ![alt text](plots/dataframe2_pred_performance.png)
 
@@ -123,12 +123,8 @@ We also used scatterplots and histograms to visualize the predicted values and p
 
 From the above summary statistics table and plots, we have the following observations for each prediction model:
 #### 4.1.1. Ridge Regression
-**The return direction prediction results based on ridge regression achieved the highest accuracy, precision, recall, and F1 score across all three models.** The highest accuracy indicates that ridge regression's prediction has the highest overall prediction performance. The highest precision suggests that when rigde regression generates positive prediction, it has the highest probability of being correct, and the highest recall signifies the model captures the among all actual positive returns.
-indicate that SVR has the lowest prediction error squared on average. The lowest MSE achieved by SVR model can also be observed from Figure 5 where prediction errors of SVR are generally distributed closer to x-axis.  
-**However, SVR also has the lowest prediciton direction accuracy (61.73%) among all three models.** The prediction direction accuracy is calculated by dividing the frequency of predicted return and actual return have the same sign by total count of prediction. In Figure 4, the prediction direction accuracy is the proportion of Quadrants II and IV's points in the whole plot. We can see that SVR has more points in Quardrant II than the other two prediction models. If we set negative predicted return as not rejecting the null hypothesis, this suggests that SVR has higher chance of being false negative (Type II error). However, we also notice that some of the misclassifed points from SVR are very close to x-axis. This can be explained by the hyperparameter of epsilon in SVR model. **The value of epsilon will define a margin of tolerance where no penalty is given to prediction errors within the margin, making the model ignore small prediction errors and assigning more extreme valuese as "support vectors". Compared with Ridge Regression and Random Forest, SVR is more robust to less extreme data points and performs better when predicting more extreme values.** In the strategy performance evaluation part, we also notice that SVR-based strategy results in better return performance despite the lowest prediciton direction accuracy (or "win ratio").  
-**Ridge Regression ranks second in MSE and R-squared, and its performance in prediction errors is comparable with SVR.** This could be explained by the fact that we use linear kernel for SVR so that both Ridge Regression and SVR predictions are based on linear transformations of the regressors. From Figure 4, we can observe that Ridge Regression often gives more conservative predictions than SVR. This can be explained by a large regularization constant (alpha) derived from the training set and the hyperparameter epsilon in SVR which ignores small errors for SVR training.  
-**Ridge Regression achieved the best 70.37% return direction prediction accuracy.** This can be observed from Figure 4 where Ridge Regression appears to have the most points in Quadrants I and III.  
-Ridge Regression also has the lowest prediction bias with an average prediction error of 0.001 as shown in Figure 6.
+**The return direction prediction results based on Ridge Regression achieved the highest accuracy, precision, recall, and F1 score across all three models.** The highest precision suggests that when Rigde Regression is having positive prediction, it has the highest probability of being correct, and the highest recall signifies the model is most likely to capture positive returns. The highest accuracy indicates that Ridge Regression's prediction has the highest overall prediction performance. This can also be observed from Figure 4 where Ridge Regression appears to have the largest counts in Quadrants II and IV of the confusion matrix.    
+Ridge Regression also has the highest probablity of being correct when predicting negative returns based on the fact that it was correct 9 out of 17 for negative prediction. Additionally. Ridge Regression also has the lowest prediction bias with a mean squared error of 0.0026 as shown in the above dataframe.
 
 #### 4.1.2. SVR
 **SVR model achieved the lowest MSE (0.002267) and the highest R-squared (0.139177) among all three models.** Both MSE and R-squared statistics indicate that SVR has the lowest prediction error squared on average. The lowest MSE achieved by SVR model can also be observed from Figure 5 where prediction errors of SVR are generally distributed closer to x-axis.  
