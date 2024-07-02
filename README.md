@@ -3,11 +3,11 @@
 **Please notice that this project is for demonstration only and not intended for any investment advice.** <br />
 All data and code are available at the [repository](https://github.com/michaelli99/1.S-P500-Index-Return-Prediction) for validation. <br />
 
-In this project, we applied multiple machine learning algorithms and economic data to **predict S&amp;P 500 index's next-month return's direction**. Our best model achieved a prediction accuracy of **67.90%** (Ridge Regression) in an 81-month out-of-sample test set. The summary statistics of prediction performance are shown as follows:
+In this project, we applied multiple machine learning algorithms and economic data to **predict the direction of S&amp;P 500 index's next-month return**. Our best model achieved a prediction accuracy of **67.90%** (Ridge Regression) in an 81-month out-of-sample test set. The summary statistics of prediction performance are shown as follows:
 
 ![alt text](plots/dataframe2_pred_performance.png)
 
-Based on the prediction results, we built and backtested three long-short trading strategies, and the hypothetical performance of the strategies are shown below.
+Based on the prediction, we built and backtested three long-short trading strategies, and the hypothetical performance of the strategies are shown below.
 
 ![alt text](plots/figure1_strategy_performance.png)
 
@@ -25,10 +25,10 @@ flowchart TD
     F --> G["Prediction Attribution (Ridge Regression)"]
 ```
 
-The following content is divided into five parts to explain the process and performance of the prediction models.
+The following content is divided into five parts to elaborate the process and performance of the prediction models.
 
 ## 1. Data Sourcing
-In this project, all data was sourced from publicly available databases (FRED, Yahoo Finance, Multpl.com, and University of Michigan Surveys of Consumers). All raw data falls into the period of July 1990 to February 2024.
+All revelant data of this project was sourced from publicly available databases (FRED, Yahoo Finance, Multpl.com, and University of Michigan Surveys of Consumers). All raw data falls into the period of July 1990 to February 2024.
 
 ### 1.1. Response/Target Variable:  
 The target varialble of the regression models is **S&P 500 Index's next intramonth return direction**. In this project, we applied three regression models to predict the index's next intra-month log return, and we will use the sign of the models' predicted return as the final prediction. The intra-month log return of month i is calculated by the formula: $$y_i = log(\frac{P_{close, i}}{P_{open, i}})$$
@@ -36,7 +36,7 @@ We chose to use log return because of its potential of being normally distribute
    
 ### 1.2. Predictors/Independent Variables:  
 To predict the target variable, we started from a pool of candidate regressors which was derived from raw data using basic mathematical transformations. The raw data can be classified into three categories: **economic, fundamental, and technical data**. Below is a short description for each of the categories.
-- Economic data includes macroeconomic indicators such as CPI components, employment statistics, and interest rates. Most of them are related to monetary or fiscal policy and are sourced from [FRED](https://fred.stlouisfed.org/).
+- Economic data includes macroeconomic indicators such as CPI components, employment statistics, and interest rates. All relate to monetary or fiscal policy and are sourced from [FRED](https://fred.stlouisfed.org/) or [University of Michigan Surveys of Consumers](http://www.sca.isr.umich.edu/).
 - Fundamental data consists of valuation data for S&P 500 Index such as earnings, PE, and dividend yield and is sourced from https://www.multpl.com/.
 - Technical data was derived from S&P 500 Index and VIX's historical prices and trading volume.
 
