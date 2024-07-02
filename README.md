@@ -7,7 +7,7 @@ Based on the prediction results, we built and backtested three long-short tradin
 
 ![alt text](plots/figure1_strategy_performance.png)
 
-**Please notice that this project is for demonstration only, and it is not intended for any investment advice.** <br />
+**Please notice that this project is for demonstration only and not intended for any investment advice.** <br />
 All data and code are available at the [repository](https://github.com/michaelli99/1.S-P500-Index-Return-Prediction) for replication purpose. <br />
 
 The general workflow of the project can be demonstrated by the following diagram:
