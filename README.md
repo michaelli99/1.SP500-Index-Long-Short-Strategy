@@ -1,5 +1,5 @@
 # S&P500 Index Return Direction Prediction
-In this project, we applied multiple machine learning algorithms and economic data to **predict S&amp;P 500 index's next-month return's direction**. Our best model achieved a prediction accuracy of **67.90%** (Ridge Regression) in an 81-month out-of-sample test set. The summary statistics for prediction performance are shown as follows:
+In this project, we applied multiple machine learning algorithms and economic data to **predict S&amp;P 500 index's next-month return's direction**. Our best model achieved a prediction accuracy of **67.90%** (Ridge Regression) in an 81-month out-of-sample test set. The summary statistics of prediction performance are shown as follows:
 
 ![alt text](plots/dataframe2_pred_performance.png)
 
@@ -10,7 +10,7 @@ Based on the prediction results, we built and backtested three long-short tradin
 **Please notice that this project is for demonstration only and not intended for any investment advice.** <br />
 All data and code are available at the [repository](https://github.com/michaelli99/1.S-P500-Index-Return-Prediction) for replication purpose. <br />
 
-The general workflow of the project can be demonstrated by the following diagram:
+The general workflow of the project is demonstrated below:
 
 ```mermaid
 flowchart TD
@@ -26,16 +26,15 @@ flowchart TD
 
 The following content is divided into five parts to explain the process and performance of the prediction models.
 
-We collected economic, fundamental, and price data and selected 6 revelant factors using a **variance inflation factor (VIF)** threshold, a t-score threshold, and **LASSO Regression**. Then we applied **Ridge Regression, Support Vector Regression (SVR), and Random Forest** respectively for predicting the index return direction. 
 ## 1. Data Sourcing
-In this project, we sourced all data from publicly available databases such as FRED and Yahoo Finance. All the indices and factors’ raw data falls into the period of July 1990 to February 2024.
+In this project, all data was sourced from publicly available databases (FRED, Yahoo Finance, Multpl.com, and University of Michigan Surveys of Consumers). All raw data falls into the period of July 1990 to February 2024.
 
 ### 1.1. Response/Target Variable:  
-The target varialble of the regression models is **S&P 500 Index's next intramonth return direction**. In this project, we will apply regression models to predict the index's next intra-month log return and use the sign of the predicted return as the final prediction result. The intra-month log return of month i is calculated by the formula: $$y_i = log(\frac{P_{close, i}}{P_{open, i}})$$
+The target varialble of the regression models is **S&P 500 Index's next intramonth return direction**. In this project, we applied three regression models to predict the index's next intra-month log return, and we will use the sign of the models' predicted return as the final prediction. The intra-month log return of month i is calculated by the formula: $$y_i = log(\frac{P_{close, i}}{P_{open, i}})$$
 We chose to use log return because of its potential of being normally distributed, and we used intra-month return for the trading strategy backtest purpose. We chose to use regression models instead of classification models because regression models can extract more information from the target variable. For example, both a -15% return and a -1% will be classified as negative returns and have the same penalty for false predictions in a classification problem, but regression models will distinguish between the two returns and penalize based on the deviations between predicted returns and actual returns.
    
 ### 1.2. Predictors/Independent Variables:  
-To predict the target variable, we first built a pool of candidate regressors with raw predictors data and basic mathematical transformation. The raw data can be classified into three categories: **economic, fundamental, and technical data**. Below is a short description for each category.
+To predict the target variable, we started from a pool of candidate regressors which was derived from raw data using basic mathematical transformations. The raw data can be classified into three categories: **economic, fundamental, and technical data**. Below is a short description for each of the categories.
 - Economic data includes macroeconomic indicators such as CPI components, employment statistics, and interest rates. Most of them are related to monetary or fiscal policy and are sourced from [FRED](https://fred.stlouisfed.org/).
 - Fundamental data consists of valuation data for S&P 500 Index such as earnings, PE, and dividend yield and is sourced from https://www.multpl.com/.
 - Technical data was derived from S&P 500 Index and VIX's historical prices and trading volume.
@@ -46,7 +45,7 @@ After sourcing the data, we converted all factors data into monthly basis. Then 
 After sourcing the data, we divided the dataset into training and testing set with the classic 80-20 split. The original sequece of the data was maintained, and we adopted one-month ahead prediction in the testing set.
 
 ### 2.1.1 Training Set
-**Training set data spans from 1990-07-31 to 2017-04-30 with a total of 322 data points.** We used the training set to select factors and derive the best hyperparameters for each prediction model. Additionally, since there were regularization/penalization components in ridge regression and support vector regression models, regressors had to be standardized/normalized to achieve equal importance in the prediction. Hence, the training set was also used to derive the nomralization scalar.  
+**Training set data spans from 1990-07-31 to 2017-04-30 with a total of 322 data points.** We used the training set to select factors and derive the best hyperparameters for each prediction model. Additionally, since there were regularization/penalization components in Ridge regression and support vector regression models, regressors had to be standardized/normalized to achieve equal importance in the prediction. Hence, the training set was also used to derive the nomralization scalar.  
 Below is a summary of hyperparameters that were derived from the training set:
 - **Ridge Regression:**
     - Alpha: Constant that multiplies the L2 term, controlling regularization strength.
