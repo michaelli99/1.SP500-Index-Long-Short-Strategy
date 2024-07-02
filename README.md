@@ -3,7 +3,7 @@ In this project, we applied multiple machine learning algorithms and economic da
 
 ![alt text](plots/dataframe2_pred_performance.png)
 
-Based on the prediction results, we also built and backtested three long-short trading strategy for S&P 500 Index, and the hypothetical performance of the strategies is compared with S&P 500 Index and shown below.
+Based on the prediction results, we built and backtested three long-short trading strategies, and the hypothetical performance of the strategies are shown below.
 
 ![alt text](plots/figure1_strategy_performance.png)
 
