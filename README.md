@@ -129,7 +129,37 @@ Ridge Regression also has the highest probablity of being correct when predictin
 #### 4.1.2. SVR
 **SVR model has the second best precision (69.81%) and the lowest recall (68.52%) among all three models.** SVR also has the lowest prediciton direction accuracy (59.26%) and the highest MSE (0.0028) among all three models, suggesting that the model is underperforming. The prediction results of SVR are determined by the "support vectors", which tend to be the more extreme data points or outliers. This will cause the model to be more sensitive to the outliers and to generate more extreme predictions. From the confusion matrices in Figure 4, we can observe that SVR predicted more negative returns than the other two models, possibly because negative returns (tail risk) are usually more extreme and more likely to become the "support vectors". From Figure 5, we can also observe that SVR's predictions are more dispersed compared with Ridge and Random Forest's prediction results.
 
-Use Control + Shift + m to toggle the tab key moving focus. Alternatively, use esc then tab to move to the next interactive element on the page.
-No file chosen
-Attach files by dragging & dropping, selecting or pasting them.
-Editing 1.SP500-Index-Return-Prediction/README.md at main · michaelli99/1.SP500-Index-Return-Prediction
+#### 4.1.3. Random Forest
+**Random Forest ranked last in precision and second in recall.** Random Forest is based on ensembling decision trees, and it resulted in the most conservative prediction as all of the predicted values fall in the range (-0.02, 0.02) possibly because of the averaging effect of all trees.
+
+#### 4.1.4. General Observation
+All three models' precisions are greater than 65%, suggesting that any of the three models is more likely to be correct than wrong when it predicts a positive return. All the recalls are greater than 65%, indicating that all three models are more likely to be correct given the positive actual return. However, it is not surprising because S&P 500 Index seems to have positive drift in both train and test samples. Based on the Actual Return vs. Predicted Return plots in Figure 5, we can see that there is a cluster in Quadrants I of each plot, but it is not obvious that a strong association between the actual return and each model's predictions.
+
+### 4.2. Strategy Performance Analysis
+After collecting the prediction result from each model, we built a long-short trading strategy based on the signs of the predicted returns and backtested the strategy's performance.  
+Suppose the strategy is implemented as follows:
+- If the predicted return is positive, the strategy will take 100% long position on S&P 500 Index at market open of next month and close the position at market close.
+- If the predicted return is negative, the strategy will take 100% short position on S&P 500 Index at market open of next month and close the position at market close.  
+
+We ignored any implicit and explicit trasaction costs to simplify the calculation, and we used actual S&P 500 Index as benchmark and backtest all three strategies from 2017-05-01 to 2024-01-31 with a total of 81 months. The strategies's performance statistics and time-series plot are shown below:
+
+![alt text](plots/dataframe3_strat_performance.png)
+
+**From the above dataframe, we can see that all three strategies has positive return in the 81-month backtest period.**  
+**The strategy based on Ridge Regression prediction achieved the best annualized return of 14.54%. The strategy also has the best performance in terms of volatility, Sharpe ratio, maximum drawdown, Calmar ratio, 95% VaR, and win rate.** The Ridge regression strategy outperformed the long-only strategy most because of its performance in 2022, and the selected inflation and inflation expectation factors likely explain the model's correct prediction.    
+**SVR strategy had a lagging 5.83% annualized return and the highest volatility of 19.57%. Additionally, the strategy has the worst performance in terms of maximum drawdown, Calmar ratio, 95% VaR, and win rate.** It is not surprising because SVR predicted more false negative returns according to the confusion matrices. However, the model has the best slugging.    
+**Random Forest achieved a 8.27% annualized return and 19.48% volatility. It ranked second in annualized return, volatility, sharpe ratio, maximum drawdown, calmar ratio, and win rate.**    
+From the following performance time-series plot, we can see that all three strategies attain positive returns in 2022 when the index dropped by 20%. This could be explained by two of the selected factors, fctr_inflation22 and fctr_inflation_exp, which are closely related to inflation and inflation expectation. Overall, we can conclude that our long-short trading strategies based on Ridge Regression achieved the best performance, and it is the only strategy that outperformed S&P 500 index. The strategy based on Random Forest predictions ranked second in most of the measures while the SVR strategy lagged behind.
+
+![alt text](plots/figure1_strategy_performance.png)
+
+## 5. Prediction Attribution (Ridge Regression)
+
+One advantage of Ridge Regression is its simplicity. The predicted value of Ridge Regression can be written as: $$y = \beta^Tx = \beta_0 x_0 + \beta_1 x_1 + \cdots + \beta_n x_n$$  
+With this formula, we can easily break down the predicted value into each factor's contribution to the predicted value. In the following graphs, we demonstrate this advantage of Ridge Regression using 2024-01-31 and 2024-02-29 as examples and compare the two month's exposures, factors' values, and factors' contribution to alpha side by side.
+
+![alt text](plots/figure8_pred_attr1.png)
+
+![alt text](plots/figure9_pred_attr2.png)
+
+![alt text](plots/figure10_pred_attr3.png)
