@@ -1,120 +1,62 @@
-Skip to content
-Navigation Menu
-michaelli99
-/
-1.SP500-Index-Return-Prediction
-
-Type / to search
-
-Code
-Issues
-Pull requests
-Actions
-Projects
-Security
-Insights
-Settings
-Files
-Go to file
-t
-plots
-README.md
-functions_demo.py
-research_demo.ipynb
-tbmpx1px5.csv
-Editing README.md in 1.SP500-Index-Return-Prediction
-Breadcrumbs1.SP500-Index-Return-Prediction
-/
-README.md
-in
-main
-
-Edit
-
-Preview
-Indent mode
-
-Spaces
-Indent size
-
-4
-Line wrap mode
-
-Soft wrap
-Editing README.md file contents
-Selection deleted
-60
-61
-62
-63
-64
-65
-66
-67
-68
-69
-70
-71
-72
-73
-74
-75
-76
-77
-78
-79
-80
-81
-82
-83
-84
-85
-86
-87
-88
-89
-90
-91
-92
-93
-94
-95
-96
-97
-98
-99
-100
-101
-102
-103
-104
-105
-106
-107
-108
-109
-110
-111
-112
-113
-114
-115
-116
-117
-118
-119
-120
-121
-122
-123
-124
-125
-126
-127
-128
-129
-130
 # S&P500 Index Return Direction Prediction
+
+**Please notice that this project is for demonstration only and not intended for any investment advice.** <br />
+All data and code are available at the [repository](https://github.com/michaelli99/1.S-P500-Index-Return-Prediction) for validation. <br />
+
+In this project, we applied multiple machine learning algorithms and leveraged open-source economic data to **predict S&amp;P 500 index's next-month return's direction**. Our best model achieved a prediction accuracy of **67.90%** (Ridge Regression) in an eighty-one-month out-of-sample test set. The summary statistics of prediction performance are shown here:
+
+![alt text](plots/dataframe2_pred_performance.png)
+
+Based on the prediction results, we built and backtested three long-short trading strategies, and the hypothetical performance of the strategies are shown below.
+
+![alt text](plots/figure1_strategy_performance.png)
+
+The general workflow of the project is demonstrated below:
+
+```mermaid
+flowchart TD
+    A[Data Sourcing] --> B[Feature Selection]
+    B --> C[Ridge Regression]
+    B --> D[SVR]
+    B --> E[Random Forest]
+    C --> F[Prediction and Strategy Performance Evaluation]
+    D --> F
+    E --> F
+    F --> G["Prediction Attribution (Ridge Regression)"]
+```
+
+The following content is divided into five parts to explain the process and performance of the prediction models.
+
+## 1. Data Sourcing
+In this project, all data was sourced from publicly available databases (FRED, Yahoo Finance, Multpl.com, and University of Michigan Surveys of Consumers). All raw data falls into the period of July 1990 to February 2024.
+
+### 1.1. Response/Target Variable:  
+Our target variable is **the direction of S&P 500 Index's next intramonth return**. We applied three regression models to predict the index's next intra-month log return respectively, and we used the sign of the models' predicted return as our final prediction. The intra-month log return of month i is calculated by the formula: $$y_i = log(\frac{P_{close, i}}{P_{open, i}})$$
+We chose to use log return because of its potential of being normally distributed, and we used intra-month return for the trading strategy backtest purpose. We chose to use regression models instead of classification models because we believe regression models can extract more information from the target variable. For example, in a classification problem, both a -15% return and a -1% will be classified as negative returns and have the same penalty for being wrong, but regression models will distinguish between the two returns and penalize based on the deviations between the predicted and actual returns.
+   
+### 1.2. Predictors/Independent Variables:  
+To predict the target variable, we started from a pool of candidate regressors which was derived from raw data using basic mathematical transformations. The raw data can be classified into three categories: **economic, fundamental, and technical data**. Below is a short description for each of the categories.
+- Economic data includes macroeconomic indicators such as CPI components, employment statistics, and interest rates. Most of them are related to monetary or fiscal policy and are sourced from [FRED](https://fred.stlouisfed.org/).
+- Fundamental data consists of valuation data for S&P 500 Index such as earnings, PE, and dividend yield and is sourced from https://www.multpl.com/.
+- Technical data was derived from S&P 500 Index and VIX's historical prices and trading volume.
+
+After sourcing the data, we converted all factor data into monthly basis. Then we shifted historical data to the actual data release month to prevent data leakage. Finally, all response and predictors' monthly data are available from July 1990 to January 2024 with a total of 403 months.
+
+## 2. Train-test Split
+After sourcing the data, we divided the dataset into training and testing set with the classic 80-20 split. **The training set spans from 1990-07-31 to 2017-04-30 with a total of 322 data points, while the testing set spans from 2017-05-31 to 2024-01-31 with a total of 81 data points.**
+
+### 2.1.1 Training Set
+The training set is used to select factors and derive the best hyperparameters for each prediction model. Additionally, since there were regularization/penalization components in Ridge regression and support vector regression models, regressors had to be standardizedto achieve equal importance in the prediction. Hence, the training set was also used to derive the standardization scalar.  
+Below is a summary of hyperparameters that were derived from the training set:
+- **Ridge Regression:**
+    - Alpha: Constant that is used to multiply the L2 term and control regularization strength.
+    - Normalization scalar: $\mu$ and $\sigma$.
+- **Support Vector Regression:**
+    - C: Regularization parameter that inversely relates to the strength of the regularization.
+    - epsilon: The epsilon-tube within which no penalty is associated in the training loss function with points predicted within a distance epsilon from the actual value.
+    - Normalization scalar: $\mu$ and $\sigma$.
+- **Random Forest:**
+    - The number of trees n.
     - The maximum depth of the tree.
     - The minimum number of samples required to split an internal node.
     
