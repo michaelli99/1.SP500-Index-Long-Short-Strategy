@@ -1,17 +1,15 @@
 # S&P500 Index Return Direction Prediction
 ## Overview
-**Please notice that this project is for demonstration only and not intended for any investment advice.** <br />
-All data and code are available at the [repository](https://github.com/michaelli99/1.S-P500-Index-Return-Prediction) for validation. <br />
 
-In this project, we used machine learning algorithms and open-source data to **predict S&amp;P 500 index next-month return direction**. The best prediction model achieved a prediction accuracy of **67.07%** (Ridge Regression) in the out-of-sample test set (August 2017 to May 2024). The summary statistics of prediction performance are shown here:
+In this project, we applied machine learning algorithms to **predict S&amp;P 500 index next-month return direction** using open-source economic and fundamental data. The best prediction model achieved a prediction accuracy of **67.07%** (Ridge Regression) in the out-of-sample test set (August 2017 to May 2024). The summary statistics of prediction performance are shown here.
 
 ![alt text](plots/dataframe2_pred_performance.png)
 
-Based on the prediction results, we built and backtested three long-short trading strategies, and the hypothetical performance of the strategies are shown below.
+Based on the prediction results, we built and backtested three long-short trading strategies and attached the hypothetical performance of the strategies here.
 
 ![alt text](plots/figure1_strategy_performance.png)
 
-The general workflow of the project is demonstrated below:
+The general workflow of the project can be demonstrated by the graph:
 
 ```mermaid
 flowchart TD
@@ -25,7 +23,10 @@ flowchart TD
     F --> G["Prediction Attribution (Ridge Regression)"]
 ```
 
-The following content is divided into five parts to explain the process and performance of the prediction models.
+The following content is divided into five sections to elaborate the project's procedures and methodologies.
+
+**Please notice that this project is for demonstration only and is not intended to serve any investment advice.** <br />
+All data and code are available at the [repository](https://github.com/michaelli99/1.S-P500-Index-Return-Prediction) for validation. <br />
 
 ## 1. Data Sourcing
 In this project, all data was sourced from publicly available databases (FRED, Yahoo Finance, Multpl.com, and University of Michigan Surveys of Consumers). All raw data falls into the period of July 1990 to February 2024.
