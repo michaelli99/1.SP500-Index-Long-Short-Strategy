@@ -317,17 +317,17 @@ def get_factor_stats(factors, response):
         y = response
         model = sm.OLS(y, X).fit()
         vif = variance_inflation_factor(factors, i)
-        info = {'name': name,
-                'coef': model.params[1],
-                'std_err':model.bse[1],
-                't': model.tvalues[1],
+        info = {'Factor Name': name,
+                'beta': model.params[1],
+                'std. error':model.bse[1],
+                't-score': model.tvalues[1],
                 'p-value': model.pvalues[1],
                 'CI_0.025': model.conf_int()[0][1],
                 'CI_0.975': model.conf_int()[1][1],
                 'VIF': vif}
         stats.append(info)
     df_stat = pd.DataFrame(stats)
-    df_stat = df_stat.set_index('name')
+    df_stat = df_stat.set_index('Factor Name')
         
     return df_stat
 
@@ -400,7 +400,7 @@ def pred_ridge1(X_train, y_train, X_test, y_test, model_cv, window_len = False, 
 
         # rolling window prediction
         if int(window_len) != 0:
-            X_train_new = X_train_new[-window_len:,:]
+            X_train_new = X_train_new.iloc[-window_len:,:]
             y_train_new = y_train_new[-window_len:,]
 
         # standardize training set and test set based only on training test
@@ -459,7 +459,7 @@ def pred_tree1(X_train, y_train, X_test, y_test, model_cv, window_len = False, m
 
         # rolling window prediction
         if int(window_len) != 0:
-            X_train_new = X_train_new[-window_len:,:]
+            X_train_new = X_train_new.iloc[-window_len:,:]
             y_train_new = y_train_new[-window_len:,]
 
         X_test_new = X_test.iloc[i:i+1, :]
@@ -524,7 +524,7 @@ def pred_svr1(X_train, y_train, X_test, y_test, model_cv, window_len = False, me
 
         # rolling window prediction
         if int(window_len) != 0:
-            X_train_new = X_train_new[-window_len:,:]
+            X_train_new = X_train_new.iloc[-window_len:,:]
             y_train_new = y_train_new[-window_len:,]
 
         # standardize training set and test set based only on training test
@@ -549,7 +549,7 @@ def pred_svr1(X_train, y_train, X_test, y_test, model_cv, window_len = False, me
 
 
 
-def get_pred_result(X_train, y_train, X_test, y_test, alphas_ridge, param_search_svr, param_search_tree):
+def get_pred_result(X_train, y_train, X_test, y_test, alphas_ridge, param_search_svr, param_search_tree, window_len = False):
     
     tscv = TimeSeriesSplit(n_splits=5)
     model_cv_ridge = RidgeCV(alphas=alphas_ridge, cv=tscv, fit_intercept=True, scoring='neg_mean_squared_error')
@@ -560,19 +560,19 @@ def get_pred_result(X_train, y_train, X_test, y_test, alphas_ridge, param_search
 
     try:
         start = time.time()
-        y_pred_ridge, alpha_fit_ridge, betas_fit_ridge, scaler_ridge = pred_ridge1(X_train, y_train, X_test, y_test, model_cv_ridge)
+        y_pred_ridge, alpha_fit_ridge, betas_fit_ridge, scaler_ridge = pred_ridge1(X_train, y_train, X_test, y_test, model_cv_ridge, window_len)
         stop = time.time()
         duration = stop - start
         print(f"Ridge regression prediction completed. Run time:{duration}.")
         
         start = time.time()
-        y_pred_svr, best_params_svr, scaler_svr = pred_svr1(X_train, y_train, X_test, y_test, model_cv_svr)
+        y_pred_svr, best_params_svr, scaler_svr = pred_svr1(X_train, y_train, X_test, y_test, model_cv_svr, window_len)
         stop = time.time()
         duration = stop - start
         print(f"SVR prediction completed. Run time:{duration}.")
 
         start = time.time()
-        y_pred_tree, best_params_tree = pred_tree1(X_train, y_train, X_test, y_test, model_cv_tree)
+        y_pred_tree, best_params_tree = pred_tree1(X_train, y_train, X_test, y_test, model_cv_tree, window_len)
         stop = time.time()
         duration = stop - start
         print(f"Random Forest prediction completed. Run time:{duration}.")
@@ -604,17 +604,23 @@ def get_pred_performance(df_pred, y_test):
     pred_precision = np.array([cm[1,1]/cm[:,1].sum() for cm in conf_matrices])
     pred_recall = np.array([cm[1,1]/cm[1,:].sum() for cm in conf_matrices])
     pred_f1 = 2*pred_precision*pred_recall/(pred_precision+pred_recall)
-
-    pred_next = np.array(['Positive' if i>=0 else 'Negative' for i in df_pred.iloc[-1, :]])
     
+    pred_corr = df_pred2.iloc[:,:].corrwith(y_test)
     pred_mse = np.mean(df_pred2.sub(y_test,axis=0)**2)
+    
+    pred_next = np.array(['Positive' if i>=0 else 'Negative' for i in df_pred.iloc[-1, :]])
+    next_tmsp = df_pred.index[-1] + pd.DateOffset(months=1)
+    next_mth = pd.to_datetime(next_tmsp).strftime('%b-%Y') 
 
     d = {'Accuracy': pred_accu,
          'Precision': pred_precision,
          'Recall': pred_recall,
          'F1 Score': pred_f1,
-         'MSE': pred_mse,
-         'Prediction (Mar-2024)': pred_next}
+#          'MSE': pred_mse,
+#          'R-squared': (pred_corr**2)*np.sign(pred_corr),
+         'Next Month': np.repeat(next_mth, 3),
+#          'Predicted Return': df_pred.iloc[-1, :],
+         'Predicted Return Direction': pred_next}
 
     df_pred_performance = pd.DataFrame(data=d).T
     
@@ -633,7 +639,7 @@ def get_strat_performance(df_pred, y_ref, y_test):
 
     #exclude last month
     annualized_return = np.exp(df_return.mean()*12)-1
-    annualized_excess_return = annualized_return - annualized_return[0]
+    annualized_active_return = annualized_return - annualized_return[0]
     annualized_vol = np.exp(df_return.std()*np.sqrt(12))-1
 
     df_total = df_return_cum
@@ -652,18 +658,19 @@ def get_strat_performance(df_pred, y_ref, y_test):
     slugging = [-df_return[model_name][df_return[model_name]>0].mean()/df_return[model_name][df_return[model_name]<0].mean()  
                 for model_name in df_return.columns]
 
-    d = {'annualized_return': annualized_return,
-         'annualized_excess_return': annualized_excess_return,
-         'annualized_volatility': annualized_vol,
-         'sharpe_ratio': sharpe_ratio,
-         'maximum_drawdown': max_drawdown,
-         'calmar_ratio': calmar_ratio,
-         'monthly_95pct_VaR': value_at_risk,
-         'long_months': long_months,
-         'short_months': short_months,
-         'position_change': position_change,
-         'win_rate': win_rate,
-         'slugging': slugging}
+    d = {'Annualized Return': annualized_return,
+         'Annualized Active Return': annualized_active_return,
+         'Annualized Vol': annualized_vol,
+         'Max Drawdown': max_drawdown,
+         '5% VaR': value_at_risk,
+         'Sharpe Ratio': sharpe_ratio,
+         'Calmar Ratio': calmar_ratio,
+         'Win Rate': win_rate,
+         'IC': win_rate*2-1,
+         'Long Months': long_months,
+         'Short Months': short_months,
+         'Position Changes': position_change,
+         'Slugging': slugging}
     df_strat_performance = pd.DataFrame(data=d).T
     
     return df_strat_performance, df_return, df_return_cum
