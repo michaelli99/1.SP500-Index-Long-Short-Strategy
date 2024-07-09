@@ -151,3 +151,7 @@ We can attribute the predicted value to each factor's contribution. In the follo
 ![alt text](plots/figure9_pred_attr2.png)
 
 ![alt text](plots/figure10_pred_attr3.png)
+
+From the above graph, we have the following observations:
+1. The beta/exposure on each factor is relatively stable in the two months.
+2. The constant term, $\beta_0$, dominates in the factor contributions.
