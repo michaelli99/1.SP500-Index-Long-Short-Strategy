@@ -1,9 +1,9 @@
 # S&P500 Index Return Direction Prediction
-
+## Overview
 **Please notice that this project is for demonstration only and not intended for any investment advice.** <br />
 All data and code are available at the [repository](https://github.com/michaelli99/1.S-P500-Index-Return-Prediction) for validation. <br />
 
-In this project, we applied multiple machine learning algorithms and leveraged open-source economic data to **predict S&amp;P 500 index's next-month return's direction**. Our best model achieved a prediction accuracy of **67.90%** (Ridge Regression) in an eighty-one-month out-of-sample test set. The summary statistics of prediction performance are shown here:
+In this project, we used machine learning algorithms and open-source data to **predict S&amp;P 500 index next-month return direction**. The best prediction model achieved a prediction accuracy of **67.07%** (Ridge Regression) in the out-of-sample test set (August 2017 to May 2024). The summary statistics of prediction performance are shown here:
 
 ![alt text](plots/dataframe2_pred_performance.png)
 
