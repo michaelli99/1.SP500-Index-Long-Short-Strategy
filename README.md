@@ -5,7 +5,7 @@ In this project, we applied machine learning algorithms to **predict S&amp;P 500
 
 ![alt text](plots/dataframe2_pred_performance.png)
 
-Based on the prediction results, we built and backtested three long-short trading strategies and attached the hypothetical performance of the strategies here.
+For each prediction model, we built and backtested with a long-short trading strategy. Below is the hypothetical performance of the strategies.
 
 ![alt text](plots/figure1_strategy_performance.png)
 
@@ -25,29 +25,29 @@ flowchart TD
 
 The following content is divided into five sections to elaborate the project's procedures and methodologies.
 
-**Please notice that this project is for demonstration only and is not intended to serve any investment advice.** <br />
+**Please notice that this project is for demonstration only and does not provide any investment recommendation.** <br />
 All data and code are available at the [repository](https://github.com/michaelli99/1.S-P500-Index-Return-Prediction) for validation. <br />
 
 ## 1. Data Sourcing
-In this project, all data was sourced from publicly available databases (FRED, Yahoo Finance, Multpl.com, and University of Michigan Surveys of Consumers). All raw data falls into the period of July 1990 to February 2024.
+In this project, all data was sourced from publicly available databases and fell into the period of January 1990 to June 2024.
 
 ### 1.1. Response/Target Variable:  
-Our target variable is **the direction of S&P 500 Index's next intramonth return**. We applied three regression models to predict the index's next intra-month log return respectively, and we used the sign of the models' predicted return as our final prediction. The intra-month log return of month i is calculated by the formula: $$y_i = log(\frac{P_{close, i}}{P_{open, i}})$$
-We chose to use log return because of its potential of being normally distributed, and we used intra-month return for the trading strategy backtest purpose. We chose to use regression models instead of classification models because we believe regression models can extract more information from the target variable. For example, in a classification problem, both a -15% return and a -1% will be classified as negative returns and have the same penalty for being wrong, but regression models will distinguish between the two returns and penalize based on the deviations between the predicted and actual returns.
+Our target variable is **the direction/sign of S&P 500 Index next intramonth return**. In the following content, we selected six facotr and applied three regression models to predict the index's next intra-month log return. Then we used the sign of the models' predicted return as our final prediction. The intra-month log return of month i is calculated by the formula: $$y_i = log(\frac{P_{close, i}}{P_{open, i}})$$
+We chose to use log return because of its potential of being normally distributed, and we used intra-month return to avoid look-ahead bias. We chose to use regression models instead of classification models because we believe regression models can extract more information from the target variable. For example, both a -15% and a -1% return would be classified as negative returns and have the same penalty for being wrong in a classification problem, but regression models will distinguish between the two returns and penalize based on the deviations from the actual return.
    
 ### 1.2. Predictors/Independent Variables:  
-To predict the target variable, we started from a pool of candidate regressors which was derived from raw data using basic mathematical transformations. The raw data can be classified into three categories: **economic, fundamental, and technical data**. Below is a short description for each of the categories.
-- Economic data includes macroeconomic indicators such as CPI components, employment statistics, and interest rates. Most of them are related to monetary or fiscal policy and are sourced from [FRED](https://fred.stlouisfed.org/).
-- Fundamental data consists of valuation data for S&P 500 Index such as earnings, PE, and dividend yield and is sourced from https://www.multpl.com/.
-- Technical data was derived from S&P 500 Index and VIX's historical prices and trading volume.
+To predict the target variable, we started from a pool of candidate factors which were derived from raw data using basic mathematical transformations. The raw data came from three categories: **economic data, fundamental data, and price data**. 
+- Economic data include CPI components, employment statistics, interest rates, and consumer expectations. They were sourced from [FRED](https://fred.stlouisfed.org/) and [University of Michigan Surveys of Consumers](http://www.sca.isr.umich.edu/).
+- Fundamental data include S&P 500 PE ratio and dividend yield and is sourced from https://www.multpl.com/.
+- Price data include S&P 500 Index and VIX's historical price and trading volume and were derived from Yahoo Finance.
 
-After sourcing the data, we converted all factor data into monthly basis. Then we shifted historical data to the actual data release month to prevent data leakage. Finally, all response and predictors' monthly data are available from July 1990 to January 2024 with a total of 403 months.
+After sourcing the data, we converted all factor data into monthly basis. Then we shifted historical data to the actual data release month to prevent look-ahead bias. Finally, all response and predictors' monthly data are from July 1990 to June 2024 with a total of 407 months.
 
 ## 2. Train-test Split
-After sourcing the data, we divided the dataset into training and testing set with the classic 80-20 split. **The training set spans from 1990-07-31 to 2017-04-30 with a total of 322 data points, while the testing set spans from 2017-05-31 to 2024-01-31 with a total of 81 data points.**
+After sourcing the data, we divided the dataset into training and testing set using a classic 80-20 split. **The training set spans from 1990-07-31 to 2017-07-31 with a total of 325 data points, while the testing set spans from 2017-08-31 to 2024-05-31 with a total of 82 data points.**
 
 ### 2.1.1 Training Set
-The training set is used to select factors and derive the best hyperparameters for each prediction model. Additionally, since there were regularization/penalization components in Ridge regression and support vector regression models, regressors had to be standardizedto achieve equal importance in the prediction. Hence, the training set was also used to derive the standardization scalar.  
+The training set is used to select factors and derive the best hyperparameters for each prediction model. Additionally, since there were regularization/penalization components in Ridge regression and support vector regression models, regressors had to be standardized to achieve equal importance in the prediction. Hence, the training set was also used to derive the standardization scalar.  
 Below is a summary of hyperparameters that were derived from the training set:
 - **Ridge Regression:**
     - Alpha: Constant that is used to multiply the L2 term and control regularization strength.
@@ -61,13 +61,13 @@ Below is a summary of hyperparameters that were derived from the training set:
     - The maximum depth of the tree.
     - The minimum number of samples required to split an internal node.
     
-We applied a 5-split time-series cross validation to the training set to derive the best hyperparameters for each prediction model. After getting the best hyperparameters for each model, we used thees hyperparameters in the testing set to predict for the target variable.
+We applied a 5-split time-series cross validation to the training set to derive the best hyperparameters for each prediction model. After getting the best hyperparameters for each model, we used these hyperparameters in the testing set to predict for the target variable.
 
 ### 2.1.2 Testing Set
-In the testing set, we used training set's best hyperparameters and scalars, and we adopted one-step ahead prediction. In other words, we trained each model with all available historical data up to the current month when predicting for next month's return.  
+In the testing set, we used training set's selected factors and best hyperparameters and predicted the target variable using a rolling-window one-step ahead prediction. The window length is set to be 80% of training set length, and we retrained prediction models with  up-to-date data when predicting for next month's return.  
 
 ## 3. Feature Engineering
-Raw predictors' data were transformed into 32 candidate regressors using basic mathematical operations (taking logarithm, month-over-month return, yoy return, or etc.). After the transformation, we applied a two-step factor selection process to select the most significant regressors for predicting the target variable:
+Raw predictors' data were transformed into 32 candidate regressors using basic mathematical operations (taking logarithm, month-over-month return, or yoy return.). After the transformation, we applied a two-step factor selection process to select the most significant and orthogonal regressors.
 - **Step1: Select up to 5 regressors from each sub-category using Lasso regression.**
 - **Step2: Select the most significant regressors from all categories based on t-score and variance inflation factor (VIF) thresholds.**
 
