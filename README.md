@@ -15,7 +15,7 @@ The following content is divided into five sections to elaborate the project's p
 All data and code are available at the [repository](https://github.com/michaelli99/1.S-P500-Index-Return-Prediction) for validation. <br />
 
 ## 1. Data Sourcing
-In this project, all data was sourced from publicly available databases and fell into the period of January 1990 to June 2024.
+In this project, all data were sourced from publicly available databases and fell into the period of January 1990 to June 2024.
 
 ### 1.1. Response/Target Variable:  
 Our target variable is **the sign of S&P 500 Index next intramonth return**. In the following content, we selected six facotr and applied three regression models to predict the index's next intra-month log return. Then we used the sign of the models' predicted return as our final prediction. The intra-month log return of month i is calculated by the formula: $$y_i = log(\frac{P_{close, i}}{P_{open, i}})$$
