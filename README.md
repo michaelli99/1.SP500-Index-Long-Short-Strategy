@@ -18,19 +18,19 @@ All data and code are available at the [repository](https://github.com/michaelli
 In this project, all data were sourced from publicly available databases and fell into the period of January 1990 to June 2024.
 
 ### 1.1. Response/Target Variable:  
-Our target variable is **the sign of S&P 500 Index next intramonth return**. In the following content, we selected six facotr and applied three regression models to predict the index's next intra-month log return. Then we used the sign of the models' predicted return as our final prediction. The intra-month log return of month i is calculated by the formula: $$y_i = log(\frac{P_{close, i}}{P_{open, i}})$$
-We chose to use log return because of its potential of being normally distributed, and we used intra-month return to avoid look-ahead bias. We chose to use regression models instead of classification models because we believe regression models can extract more information from the target variable. For example, both a -15% and a -1% return would be classified as negative returns and have the same penalty for being wrong in a classification problem, but regression models will distinguish between the two returns and penalize based on the deviations from the actual return.
+Our target variable is **the sign of S&P 500 Index next intramonth return**. We applied regression models to predict the index's next intra-month log return and used the sign of the models' predicted return as our final prediction. The intra-month log return of month i is calculated by the formula: $$y_i = log(\frac{P_{close, i}}{P_{open, i}})$$
+We chose to use log return because of its potential of being normally distributed, and we used intra-month return to avoid look-ahead bias. We chose to use regression models instead of classification models because regression models can extract more information from the target variable. For example, both a -15% and a -1% return would be classified as negative returns and have the same penalty for being wrong in a classification problem, but regression models will distinguish between the two returns and penalize based on the deviations from the actual return.
    
 ### 1.2. Predictors/Independent Variables:  
-To predict the target variable, we started from a pool of candidate factors which were derived from raw data using basic mathematical transformations. The raw data came from three categories: **economic data, fundamental data, and price data**. 
-- **Economic data** include CPI components, employment statistics, interest rates, and consumer expectations. They were sourced from [FRED](https://fred.stlouisfed.org/) and [University of Michigan Surveys of Consumers](http://www.sca.isr.umich.edu/).
-- **Fundamental data** include S&P 500 PE ratio and dividend yield and were sourced from https://www.multpl.com/.
-- **Price data** include S&P 500 Index and VIX's historical price and trading volume and were derived from Yahoo Finance.
+To predict the target variable, we started from a pool of candidate factors which were derived from raw data using basic mathematical transformations. Our raw data fell into three categories: **economic data, fundamental data, and price data**. 
+- **Economic data** included CPI components, unemployment statistics, interest rates, and consumer expectations. They were sourced from [FRED](https://fred.stlouisfed.org/) and [University of Michigan Surveys of Consumers](http://www.sca.isr.umich.edu/).
+- **Fundamental data** included S&P 500 PE ratio and dividend yield and were sourced from https://www.multpl.com/.
+- **Price data** included S&P 500 Index and VIX's historical price and trading volume and were derived from Yahoo Finance.
 
-After sourcing the data, we converted all factor data into monthly basis. Then we shifted historical data to the actual data release month to prevent look-ahead bias. Finally, all response and predictors' monthly data are from July 1990 to June 2024 with a total of 407 months.
+After sourcing the data, we converted all factor data into monthly basis. Then we shifted historical data to the actual data release month to prevent look-ahead bias. Finally, we have the response and predictors' monthly data from July 1990 to June 2024 (407 months in total).
 
 ## 2. Train-test Split
-After sourcing the data, we divided the dataset into training and testing set using a classic 80-20 split. The training set spans from **1990-07-31 to 2017-07-31** with a total of 325 data points, while the testing set spans from **2017-08-31 to 2024-05-31** with a total of 82 data points.
+After sourcing and cleaning the data, we divided the dataset into training and testing set using a classic 80-20 split. The training set spans from **1990-07-31 to 2017-07-31** with a total of 325 data points, while the testing set spans from **2017-08-31 to 2024-05-31** with a total of 82 data points.
 
 ### 2.1.1 Training Set
 The training set is used to select factors and derive the best hyperparameters for each prediction model. Additionally, since there were regularization/penalization components in Ridge regression and support vector regression models, factors had to be standardized to achieve equal importance in the prediction. Hence, the training set was also used to derive the standardization scalar.  
