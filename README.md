@@ -129,8 +129,8 @@ We ignored any implicit and explicit trasaction costs to simplify the calculatio
 
 ## 5. Prediction Attribution (Ridge Regression)
 
-One advantage of Ridge Regression is its linearity. The predicted value of Ridge Regression can be written as: $$y = \beta^Tx = \beta_0 x_0 + \beta_1 x_1 + \cdots + \beta_n x_n$$  
-We can attribute the predicted value to each factor's contribution. In the following graphs, we demonstrate this advantage of Ridge Regression using 2024-05-31 and 2024-06-30 as examples and compare the two month's exposures, factors' values, and factors' contribution to alpha side by side.
+The predicted value of Ridge Regression can be written as: $$y = \beta^Tx = \beta_0 x_0 + \beta_1 x_1 + \cdots + \beta_n x_n$$  
+We can decompose the predicted return value to each factor's contribution. In the following graphs, we demonstrate this advantage of Ridge Regression using 2024-05-31 and 2024-06-30 as examples and compare the two month's exposures, factors' values, and factors' contribution to predicted return.
 
 ![alt text](plots/figure8_pred_attr1.png)
 
