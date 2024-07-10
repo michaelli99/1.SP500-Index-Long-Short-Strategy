@@ -9,20 +9,6 @@ For each prediction model, we built and backtested with a long-short trading str
 
 ![alt text](plots/figure1_strategy_performance.png)
 
-The general workflow of the project can be demonstrated by the graph:
-
-```mermaid
-flowchart TD
-    A[Data Sourcing] --> B[Feature Selection]
-    B --> C[Ridge Regression]
-    B --> D[SVR]
-    B --> E[Random Forest]
-    C --> F[Prediction and Strategy Performance Evaluation]
-    D --> F
-    E --> F
-    F --> G["Prediction Attribution (Ridge Regression)"]
-```
-
 The following content is divided into five sections to elaborate the project's procedures and methodologies.
 
 **Please notice that this project is for demonstration only and does not provide any investment recommendation.** <br />
